@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <title>NoSponsor</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <header>
+    <img src="../icons/icon32.png" alt="" width="20" height="20">
+    <h1>NoSponsor</h1>
+  </header>
+
+  <section class="stat">
+    <div class="count" id="count">–</div>
+    <div class="meta">
+      <div class="label" id="countLabel">contenuti sponsorizzati</div>
+      <div class="detector" id="detector">&nbsp;</div>
+    </div>
+  </section>
+
+  <section class="group">
+    <div class="group-title">Cosa fare</div>
+    <div class="segmented" role="radiogroup" aria-label="Modalità">
+      <button data-mode="highlight" role="radio">Evidenzia</button>
+      <button data-mode="collapse" role="radio">Comprimi</button>
+      <button data-mode="hide" role="radio">Nascondi</button>
+    </div>
+  </section>
+
+  <section class="group">
+    <label class="row">
+      <span>
+        <span class="row-title">Attivo su <b id="host">questo sito</b></span>
+      </span>
+      <input type="checkbox" id="siteEnabled" class="switch">
+    </label>
+    <label class="row">
+      <span>
+        <span class="row-title">Rilevamento generico</span>
+        <span class="row-hint">Cerca le etichette "Sponsorizzato" anche sugli altri siti</span>
+      </span>
+      <input type="checkbox" id="generic" class="switch">
+    </label>
+  </section>
+
+  <footer id="note"></footer>
+
+  <script src="popup.js"></script>
+</body>
+</html>
