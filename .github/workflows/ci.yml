@@ -11,8 +11,8 @@ jobs:
     # that obfuscate labels) were recorded on macOS and depend on fonts and layout.
     runs-on: macos-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
         with:
           node-version-file: .nvmrc
           cache: npm
@@ -24,7 +24,10 @@ jobs:
       - run: npx playwright install chromium
       - run: npm run test:e2e
       - run: npm run zip
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: nosponsor-zip
           path: .output/*.zip
+          # .output is a hidden directory, which upload-artifact skips by default.
+          include-hidden-files: true
+          if-no-files-found: error
