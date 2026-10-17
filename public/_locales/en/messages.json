@@ -88,5 +88,27 @@
   "pageAdAfter": {
     "message": "left",
     "description": "On YouTube, over a video ad: text after the remaining time (e.g. \"left\" in \"Ad · 0:12 left\"); may be empty."
+  },
+  "popupReport": {
+    "message": "Report a problem",
+    "description": "Popup, at the bottom: link that opens a new GitHub issue to report something that does not work."
+  },
+  "reportTitle": {
+    "message": "Problem on $HOST$",
+    "description": "Title of the GitHub issue opened by \"Report a problem\", e.g. \"Problem on www.amazon.it\".",
+    "placeholders": {
+      "host": {
+        "content": "$1",
+        "example": "www.amazon.it"
+      }
+    }
+  },
+  "reportTitleNoPage": {
+    "message": "Problem report",
+    "description": "Title of the GitHub issue opened by \"Report a problem\" when the page could not be scanned."
+  },
+  "reportPrompt": {
+    "message": "What's wrong?",
+    "description": "First line of the GitHub issue opened by \"Report a problem\": the user writes the answer below it."
   }
 }

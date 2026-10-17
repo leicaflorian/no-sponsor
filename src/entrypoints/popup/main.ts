@@ -1,6 +1,7 @@
 import { browser } from 'wxt/browser';
 import type { GetMessage, PageInfo } from '../../shared/messages';
 import { t, uiLang, type MessageKey } from '../../shared/i18n';
+import { buildReportUrl } from '../../shared/report';
 import { DEFAULTS, type Mode, type Settings } from '../../shared/settings';
 
 const $ = (id: string) => document.getElementById(id) as HTMLElement;
@@ -89,6 +90,13 @@ async function init(): Promise<void> {
     if ((e.target as HTMLInputElement).checked) set.delete(page.host);
     else set.add(page.host);
     save({ disabledHosts: [...set] });
+  });
+
+  $('report').addEventListener('click', (e) => {
+    e.preventDefault();
+    const version = browser.runtime.getManifest().version;
+    browser.tabs.create({ url: buildReportUrl(settings, page, version, t) });
+    window.close();
   });
 }
 

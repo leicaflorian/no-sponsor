@@ -67,5 +67,23 @@
   },
   "pageAdAfter": {
     "message": ""
+  },
+  "popupReport": {
+    "message": "Segnala un problema"
+  },
+  "reportTitle": {
+    "message": "Problema su $HOST$",
+    "placeholders": {
+      "host": {
+        "content": "$1",
+        "example": "www.amazon.it"
+      }
+    }
+  },
+  "reportTitleNoPage": {
+    "message": "Segnalazione di un problema"
+  },
+  "reportPrompt": {
+    "message": "Cosa non va?"
   }
 }

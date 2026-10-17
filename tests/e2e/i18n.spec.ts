@@ -10,12 +10,14 @@ const TEXTS = {
     adBefore: 'Annuncio · mancano',
     modes: ['Evidenzia', 'Comprimi', 'Nascondi'],
     noScan: 'Nessuna analisi',
+    report: 'Segnala un problema',
   },
   en: {
     collapsed: 'Sponsored content · click to show',
     adBefore: 'Ad ·',
     modes: ['Highlight', 'Collapse', 'Hide'],
     noScan: 'Not scanned',
+    report: 'Report a problem',
   },
 };
 
@@ -63,6 +65,7 @@ for (const lang of ['it', 'en'] as const) {
     expect(await popup.evaluate(() => document.documentElement.lang)).toBe(lang);
     await expect(popup.locator('.segmented button')).toHaveText(texts.modes);
     await expect(popup.locator('#countLabel')).toHaveText(texts.noScan);
+    await expect(popup.locator('#report')).toHaveText(texts.report);
   });
 }
 
