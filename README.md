@@ -6,6 +6,8 @@ Chrome extension (Manifest V3) that finds sponsored content and **highlights** i
 
 Dedicated detectors: **Google, Amazon, Subito.it, eBay**. On other sites there is a generic detection (can be turned off) based on the labels "Sponsorizzato", "Sponsored", "Pubblicità"... and on standard ad slots (Google Publisher Tag, AdSense).
 
+On **YouTube**, video ads play at **16x**, so a 30-second ad is over in about 2 seconds. Meanwhile the picture is blacked out, the sound is muted and a label on the player shows the real time left. When the ad ends, the video goes on at the speed and with the sound it had before.
+
 The UI texts are in Italian for now; they will be localized (it/en) in Phase 6. The project documentation lives in the owner's vault, outside the repo.
 
 ## Requirements
