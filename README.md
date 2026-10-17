@@ -67,9 +67,9 @@ npm run snapshot -- <site> <page> <url> [--manual]
 npm run record-expected -- <site>/<page>
 ```
 
-`snapshot` saves the cleaned-up page (no scripts or images) in `tests/fixtures/<site>/`. With `--manual` the browser opens and you prepare the page by hand (login, cookies, scroll) before saving. If the site blocks Playwright's Chromium, use `NSP_CHANNEL=chrome` for the installed Chrome. `record-expected` records the expected results, to be checked by hand before the commit.
+`snapshot` saves the cleaned-up page (no scripts or images) in `tests/fixtures/<site>/`. With `--manual` the browser opens with a fresh profile and you prepare the page by hand (captcha, cookies, scrolling until the sponsored blocks load) before saving; never log in. If the site blocks Playwright's Chromium, use `NSP_CHANNEL=chrome` for the installed Chrome. `record-expected` records the expected results, to be checked by hand before the commit.
 
-Still to be saved, by the owner: `google/ricerca` and a new `amazon/prodotto`.
+The repository is public, so a saved page must not contain personal data. The script replaces Amazon's delivery location and Google's IP-based postcode, and prints any address-like strings left (for example Google's local results, which follow your location): neutralize them by hand before committing.
 
 ## How it works
 
