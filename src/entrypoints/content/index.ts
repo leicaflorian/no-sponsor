@@ -13,6 +13,7 @@ import { findSite, GENERIC } from '../../rules/detectors';
 import { startYouTube } from '../../sites/youtube';
 import type { Detector } from '../../rules/types';
 import type { CountMessage, PageInfo } from '../../shared/messages';
+import { applyPageTexts, watchPageTexts } from '../../shared/page-texts';
 import { DEFAULTS, type Settings } from '../../shared/settings';
 import './style.css';
 
@@ -76,10 +77,13 @@ export default defineContentScript({
 
     function applyMode(): void {
       document.documentElement.dataset['nspMode'] = enabledHere() ? settings.mode : 'off';
+      applyPageTexts(document.documentElement);
       if (!youtube) return;
       document.documentElement.dataset['nspYt'] = youtubeOn() ? 'on' : 'off';
       youtube.refresh();
     }
+
+    watchPageTexts(document.documentElement);
 
     browser.storage.sync.get({ ...DEFAULTS }, (stored) => {
       settings = { ...DEFAULTS, ...(stored as Partial<Settings>) };
@@ -143,6 +147,7 @@ export default defineContentScript({
       // keep only the outermost roots
       const top = roots.filter((r) => !roots.some((o) => o !== r && o.contains(r)));
       top.forEach((r) => scan(r, config()));
+      applyPageTexts(document.documentElement); // the site may have rewritten the style of <html>
       report();
     }
 

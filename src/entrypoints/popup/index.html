@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="it">
+<html>
   <head>
     <meta charset="utf-8" />
     <title>NoSponsor</title>
@@ -14,31 +14,33 @@
     <section class="stat">
       <div class="count" id="count">–</div>
       <div class="meta">
-        <div class="label" id="countLabel">contenuti sponsorizzati</div>
+        <div class="label" id="countLabel" data-i18n="popupCountMany"></div>
         <div class="detector" id="detector">&nbsp;</div>
       </div>
     </section>
 
     <section class="group">
-      <div class="group-title">Cosa fare</div>
-      <div class="segmented" role="radiogroup" aria-label="Modalità">
-        <button data-mode="highlight" role="radio">Evidenzia</button>
-        <button data-mode="collapse" role="radio">Comprimi</button>
-        <button data-mode="hide" role="radio">Nascondi</button>
+      <div class="group-title" data-i18n="popupModeTitle"></div>
+      <div class="segmented" role="radiogroup" data-i18n-aria-label="popupModeLabel">
+        <button data-mode="highlight" role="radio" data-i18n="popupModeHighlight"></button>
+        <button data-mode="collapse" role="radio" data-i18n="popupModeCollapse"></button>
+        <button data-mode="hide" role="radio" data-i18n="popupModeHide"></button>
       </div>
     </section>
 
     <section class="group">
       <label class="row">
         <span>
-          <span class="row-title">Attivo su <b id="host">questo sito</b></span>
+          <span class="row-title"
+            ><span data-i18n="popupActiveOn"></span> <b id="host" data-i18n="popupThisSite"></b
+          ></span>
         </span>
         <input type="checkbox" id="siteEnabled" class="switch" />
       </label>
       <label class="row">
         <span>
-          <span class="row-title">Rilevamento generico</span>
-          <span class="row-hint">Cerca le etichette "Sponsorizzato" anche sugli altri siti</span>
+          <span class="row-title" data-i18n="popupGeneric"></span>
+          <span class="row-hint" data-i18n="popupGenericHint"></span>
         </span>
         <input type="checkbox" id="generic" class="switch" />
       </label>

@@ -75,7 +75,8 @@ html[data-nsp-mode='collapse'] .nsp-hit:not(.nsp-open) {
 }
 
 html[data-nsp-mode='collapse'] .nsp-hit:not(.nsp-open)::after {
-  content: 'Contenuto sponsorizzato · clicca per mostrare' !important;
+  /* Translated text from src/shared/page-texts.ts; English if it is missing. */
+  content: var(--nsp-t-collapsed, 'Sponsored content · click to show') !important;
   position: absolute !important;
   inset: 0 !important;
   z-index: 10 !important;
@@ -124,7 +125,7 @@ html[data-nsp-yt='on'] .html5-video-player.ad-showing .ytp-visit-advertiser-link
 
 /* Remaining time, written by src/sites/youtube.ts: no node is added to the player. */
 html[data-nsp-yt='on'] .html5-video-player.ad-showing[data-nsp-remaining]::after {
-  content: 'Annuncio · mancano ' attr(data-nsp-remaining) !important;
+  content: var(--nsp-t-ad-before, 'Ad ·') ' ' attr(data-nsp-remaining) ' ' var(--nsp-t-ad-after, 'left') !important;
   position: absolute !important;
   top: 12px !important;
   left: 12px !important;

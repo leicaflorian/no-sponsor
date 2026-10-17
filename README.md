@@ -8,7 +8,7 @@ Dedicated detectors: **Google, Amazon, Subito.it, eBay**. On other sites there i
 
 On **YouTube**, video ads play at **16x**, so a 30-second ad is over in about 2 seconds. Meanwhile the picture is blacked out, the sound is muted and a label on the player shows the real time left. When the ad ends, the video goes on at the speed and with the sound it had before.
 
-The UI texts are in Italian for now; they will be localized (it/en) in Phase 6. The project documentation lives in the owner's vault, outside the repo.
+The UI is in Italian or English, following the browser's language (English for every other language). The project documentation lives in the owner's vault, outside the repo.
 
 ## Requirements
 
@@ -83,6 +83,7 @@ The repository is public, so a saved page must not contain personal data. The sc
 - Three strategies per site: **known selectors**, **text labels** (going up to the card's container) and, on sites that obfuscate, the **actually visible text** rebuilt in on-screen order (letters hidden via CSS or reordered with `order`) plus `aria-labelledby`.
 - A debounced `MutationObserver` covers infinite scroll and content loaded later.
 - Every marked element has `data-nsp-reason` with the rule that found it: useful in DevTools to understand false positives.
+- UI texts live in `public/_locales/{en,it}/messages.json` and are read through `t()` in `src/shared/i18n.ts`. The texts the CSS shows on pages (collapsed bar, YouTube ad veil) are passed as custom properties on `<html>`, with English as the fallback in the stylesheet. The e2e tests run in Italian unless a test asks for another language (`launch('en')`).
 
 ## Quick debugging
 

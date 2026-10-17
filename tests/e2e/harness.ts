@@ -1,4 +1,5 @@
 import { chromium, type BrowserContext, type Page, type Worker } from '@playwright/test';
+import { execFileSync } from 'node:child_process';
 import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -46,13 +47,26 @@ export function expectedPath(site: string, name: string): string {
   return join(FIXTURES_DIR, site, `${name}.expected.json`);
 }
 
-export async function launch(): Promise<{ context: BrowserContext; sw: Worker }> {
+// Browser language, which chrome.i18n follows. On macOS Chromium ignores --lang and reads
+// AppleLanguages from the preferences of its own app (Chrome for Testing, not the user's Chrome)
+// when it starts; tests run one at a time (workers: 1), so they never race on it.
+export type Lang = 'it' | 'en' | 'de';
+export const CHROMIUM_DEFAULTS_DOMAIN = 'com.google.chrome.for.testing';
+
+function languageArgs(lang: Lang): string[] {
+  if (process.platform !== 'darwin') return [`--lang=${lang}`];
+  execFileSync('defaults', ['write', CHROMIUM_DEFAULTS_DOMAIN, 'AppleLanguages', '-array', lang]);
+  return [];
+}
+
+// Italian by default, also in CI (whose macOS is in English): the expected texts are Italian.
+export async function launch(lang: Lang = 'it'): Promise<{ context: BrowserContext; sw: Worker }> {
   const path = extensionPath();
   if (!existsSync(join(path, 'manifest.json'))) throw new Error(`Extension not found in ${path}`);
   const context = await chromium.launchPersistentContext('', {
     channel: 'chromium',
     viewport: { width: 1280, height: 900 },
-    args: [`--disable-extensions-except=${path}`, `--load-extension=${path}`],
+    args: [`--disable-extensions-except=${path}`, `--load-extension=${path}`, ...languageArgs(lang)],
   });
   const sw = context.serviceWorkers()[0] ?? (await context.waitForEvent('serviceworker'));
   return { context, sw };
@@ -110,6 +124,10 @@ export async function record(page: Page, sw: Worker): Promise<Recording> {
     mode: document.documentElement.dataset['nspMode'] ?? '',
   }));
   return { hits, badge: await badgeText(page, sw), mode };
+}
+
+export function popupUrl(sw: Worker): string {
+  return `chrome-extension://${new URL(sw.url()).host}/popup.html`;
 }
 
 export async function setSettings(sw: Worker, patch: Partial<Settings>): Promise<void> {

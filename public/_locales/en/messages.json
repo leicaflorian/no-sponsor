@@ -1,0 +1,92 @@
+{
+  "locale": {
+    "message": "en",
+    "description": "Language code of this file, used for <html lang> in the popup. Not a text to translate: it is the code of the locale folder."
+  },
+  "extDescription": {
+    "message": "Highlights, collapses or hides sponsored content on Google, Amazon, eBay, Subito and other sites. YouTube ads at 16x.",
+    "description": "Extension description in the browser and in the store listing (max 132 characters)."
+  },
+  "popupCountMany": {
+    "message": "sponsored items",
+    "description": "Popup, under the number: more than one sponsored item found (also 0)."
+  },
+  "popupCountOne": {
+    "message": "sponsored item",
+    "description": "Popup, under the number: exactly one sponsored item found."
+  },
+  "popupNoScan": {
+    "message": "Not scanned",
+    "description": "Popup, in place of the counter label: the page could not be scanned."
+  },
+  "popupNoScanHint": {
+    "message": "Page not supported, or reload it",
+    "description": "Popup, under \"Not scanned\": why, and what to do."
+  },
+  "popupDetector": {
+    "message": "Detector: $SITE$",
+    "description": "Popup, under the counter: the site detector in use, e.g. \"Detector: Amazon\".",
+    "placeholders": {
+      "site": {
+        "content": "$1",
+        "example": "Amazon"
+      }
+    }
+  },
+  "popupGeneric": {
+    "message": "Generic detection",
+    "description": "Popup: name of the generic detection (toggle title, and detector in use on other sites)."
+  },
+  "popupUnsupported": {
+    "message": "Site not supported",
+    "description": "Popup, under the counter: no detector for this site and generic detection off."
+  },
+  "popupModeTitle": {
+    "message": "What to do",
+    "description": "Popup: title above the three mode buttons."
+  },
+  "popupModeLabel": {
+    "message": "Mode",
+    "description": "Popup: accessible name (aria-label) of the group of mode buttons."
+  },
+  "popupModeHighlight": {
+    "message": "Highlight",
+    "description": "Popup: mode button, sponsored items get a border and a badge."
+  },
+  "popupModeCollapse": {
+    "message": "Collapse",
+    "description": "Popup: mode button, sponsored items become a bar that opens on click."
+  },
+  "popupModeHide": {
+    "message": "Hide",
+    "description": "Popup: mode button, sponsored items disappear."
+  },
+  "popupActiveOn": {
+    "message": "Active on",
+    "description": "Popup: first part of the site toggle, followed by the site name in bold."
+  },
+  "popupThisSite": {
+    "message": "this site",
+    "description": "Popup: stands in for the site name when there is none."
+  },
+  "popupGenericHint": {
+    "message": "Looks for \"Sponsored\" labels on other sites too",
+    "description": "Popup: hint under the generic detection toggle."
+  },
+  "popupOffHere": {
+    "message": "Off on this site: items are counted but not changed.",
+    "description": "Popup, at the bottom: the extension is turned off on this site."
+  },
+  "pageCollapsed": {
+    "message": "Sponsored content · click to show",
+    "description": "On the page: text of the bar that replaces a collapsed sponsored item."
+  },
+  "pageAdBefore": {
+    "message": "Ad ·",
+    "description": "On YouTube, over a video ad: text before the remaining time (e.g. \"Ad ·\" in \"Ad · 0:12 left\")."
+  },
+  "pageAdAfter": {
+    "message": "left",
+    "description": "On YouTube, over a video ad: text after the remaining time (e.g. \"left\" in \"Ad · 0:12 left\"); may be empty."
+  }
+}

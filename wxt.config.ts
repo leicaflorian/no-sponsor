@@ -6,8 +6,9 @@ export default defineConfig({
   srcDir: 'src',
   manifest: {
     name: 'NoSponsor',
-    description:
-      'Evidenzia, comprime o nasconde i contenuti sponsorizzati su Google, Amazon, Subito, eBay e altri siti.',
+    // Texts in public/_locales; English for every language other than Italian.
+    default_locale: 'en',
+    description: '__MSG_extDescription__',
     permissions: ['storage'],
     action: {
       default_title: 'NoSponsor',

@@ -1,0 +1,71 @@
+{
+  "locale": {
+    "message": "it"
+  },
+  "extDescription": {
+    "message": "Evidenzia, comprime o nasconde gli sponsorizzati su Google, Amazon, Subito, eBay e altri siti. Annunci YouTube a 16x."
+  },
+  "popupCountMany": {
+    "message": "contenuti sponsorizzati"
+  },
+  "popupCountOne": {
+    "message": "contenuto sponsorizzato"
+  },
+  "popupNoScan": {
+    "message": "Nessuna analisi"
+  },
+  "popupNoScanHint": {
+    "message": "Pagina non supportata o da ricaricare"
+  },
+  "popupDetector": {
+    "message": "Rilevatore: $SITE$",
+    "placeholders": {
+      "site": {
+        "content": "$1",
+        "example": "Amazon"
+      }
+    }
+  },
+  "popupGeneric": {
+    "message": "Rilevamento generico"
+  },
+  "popupUnsupported": {
+    "message": "Sito non supportato"
+  },
+  "popupModeTitle": {
+    "message": "Cosa fare"
+  },
+  "popupModeLabel": {
+    "message": "Modalità"
+  },
+  "popupModeHighlight": {
+    "message": "Evidenzia"
+  },
+  "popupModeCollapse": {
+    "message": "Comprimi"
+  },
+  "popupModeHide": {
+    "message": "Nascondi"
+  },
+  "popupActiveOn": {
+    "message": "Attivo su"
+  },
+  "popupThisSite": {
+    "message": "questo sito"
+  },
+  "popupGenericHint": {
+    "message": "Cerca le etichette \"Sponsorizzato\" anche sugli altri siti"
+  },
+  "popupOffHere": {
+    "message": "Disattivato su questo sito: i contenuti vengono contati ma non modificati."
+  },
+  "pageCollapsed": {
+    "message": "Contenuto sponsorizzato · clicca per mostrare"
+  },
+  "pageAdBefore": {
+    "message": "Annuncio · mancano"
+  },
+  "pageAdAfter": {
+    "message": ""
+  }
+}

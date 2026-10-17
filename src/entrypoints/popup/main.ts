@@ -1,5 +1,6 @@
 import { browser } from 'wxt/browser';
 import type { GetMessage, PageInfo } from '../../shared/messages';
+import { t, uiLang, type MessageKey } from '../../shared/i18n';
 import { DEFAULTS, type Mode, type Settings } from '../../shared/settings';
 
 const $ = (id: string) => document.getElementById(id) as HTMLElement;
@@ -16,25 +17,25 @@ function render(): void {
 
   if (!page) {
     $('count').textContent = '–';
-    $('countLabel').textContent = 'Nessuna analisi';
-    $('detector').textContent = 'Pagina non supportata o da ricaricare';
-    $('host').textContent = 'questo sito';
+    $('countLabel').textContent = t('popupNoScan');
+    $('detector').textContent = t('popupNoScanHint');
+    $('host').textContent = t('popupThisSite');
     $input('siteEnabled').disabled = true;
     return;
   }
 
   const off = settings.disabledHosts.includes(page.host);
   $('count').textContent = String(page.n);
-  $('countLabel').textContent = page.n === 1 ? 'contenuto sponsorizzato' : 'contenuti sponsorizzati';
+  $('countLabel').textContent = t(page.n === 1 ? 'popupCountOne' : 'popupCountMany');
   $('detector').textContent = page.site
-    ? `Rilevatore: ${page.site}`
+    ? t('popupDetector', page.site)
     : settings.generic
-      ? 'Rilevamento generico'
-      : 'Sito non supportato';
+      ? t('popupGeneric')
+      : t('popupUnsupported');
   $('host').textContent = page.host;
   $input('siteEnabled').disabled = false;
   $input('siteEnabled').checked = !off;
-  $('note').textContent = off ? 'Disattivato su questo sito: i contenuti vengono contati ma non modificati.' : '';
+  $('note').textContent = off ? t('popupOffHere') : '';
 }
 
 function save(patch: Partial<Settings>): void {
@@ -53,7 +54,19 @@ async function refreshCount(tabId: number): Promise<void> {
   render();
 }
 
+// Fixed texts of index.html, marked with data-i18n (text) and data-i18n-aria-label.
+function translate(root: ParentNode): void {
+  document.documentElement.lang = uiLang();
+  root.querySelectorAll<HTMLElement>('[data-i18n]').forEach((el) => {
+    el.textContent = t(el.dataset['i18n'] as MessageKey);
+  });
+  root.querySelectorAll<HTMLElement>('[data-i18n-aria-label]').forEach((el) => {
+    el.setAttribute('aria-label', t(el.dataset['i18nAriaLabel'] as MessageKey));
+  });
+}
+
 async function init(): Promise<void> {
+  translate(document);
   settings = { ...DEFAULTS, ...((await browser.storage.sync.get(DEFAULTS)) as Partial<Settings>) };
   const [tab] = await browser.tabs.query({ active: true, currentWindow: true });
   render();
