@@ -28,19 +28,21 @@ const state = () =>
     return {
       opacity: getComputedStyle(video).opacity,
       muted: video.muted,
+      rate: video.playbackRate,
       card: getComputedStyle(card).display,
       remaining: player.dataset['nspRemaining'] ?? null,
       label: getComputedStyle(player, '::after').content,
     };
   });
 
-test('veils the ad and keeps Skip visible', async () => {
+test('veils the ad, plays it at 16x and keeps Skip visible', async () => {
   // The video must have loaded its metadata, otherwise the duration is unknown.
   await page.waitForFunction(() => (document.querySelector('video') as HTMLVideoElement).readyState >= 1);
   await setAd(true);
   await expect.poll(async () => (await state()).muted, { timeout: 1_000 }).toBe(true);
   const s = await state();
   expect(s.opacity).toBe('0');
+  expect(s.rate).toBe(16);
   expect(s.card).toBe('none');
   expect(s.remaining).toMatch(/^0:\d\d$/);
   expect(s.label).toContain('Annuncio · mancano');
@@ -64,6 +66,7 @@ test('restores everything when the ad ends', async () => {
   await expect.poll(async () => (await state()).muted, { timeout: 1_000 }).toBe(false);
   const s = await state();
   expect(s.opacity).toBe('1');
+  expect(s.rate).toBe(1);
   expect(s.remaining).toBeNull();
 });
 
@@ -77,4 +80,5 @@ test('does nothing when YouTube is disabled', async () => {
   const s = await state();
   expect(s.opacity).toBe('1');
   expect(s.muted).toBe(false);
+  expect(s.rate).toBe(1);
 });
