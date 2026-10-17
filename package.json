@@ -1,6 +1,6 @@
 {
   "name": "nosponsor",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "private": true,
   "type": "module",
   "license": "GPL-3.0-or-later",
@@ -19,7 +19,8 @@
     "test:e2e": "wxt build && playwright test",
     "test:e2e:legacy": "NSP_EXT=legacy playwright test",
     "snapshot": "tsx scripts/snapshot.ts",
-    "record-expected": "tsx scripts/record-expected.ts"
+    "record-expected": "tsx scripts/record-expected.ts",
+    "icons": "tsx scripts/icons.ts"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
