@@ -10,6 +10,12 @@ On **YouTube**, video ads play at **16x**, so a 30-second ad is over in about 2 
 
 The UI is in Italian or English, following the browser's language (English for every other language). The project documentation lives in the owner's vault, outside the repo.
 
+## Install
+
+From the Chrome Web Store: **[NoSponsor](https://chromewebstore.google.com/detail/nlbdnpodndocljlpajidbahbdomalbea)**. Updates arrive automatically.
+
+To try a local build instead, see *Build and load in Chrome* below.
+
 ## Requirements
 
 Node 22 (version in `.nvmrc`): with nvm, `nvm use` is enough.
