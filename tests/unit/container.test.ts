@@ -24,4 +24,12 @@ describe('findContainer', () => {
     document.body.innerHTML = '<div><span id="el">x</span></div>';
     expect(findContainer(document.getElementById('el') as Element, cfg)).toBeNull();
   });
+
+  it('never picks the YouTube player as container', () => {
+    // The player has a class containing "card" (ytp-cards-teaser-dismissible) and holds the ad's "Sponsorizzato".
+    document.body.innerHTML =
+      '<div id="movie_player" class="html5-video-player ytp-cards-teaser-dismissible"><span id="el">Sponsorizzato</span></div>';
+    const yt: Detector = { ...cfg, container: ['[class*="card" i]'] };
+    expect(findContainer(document.getElementById('el') as Element, yt)).toBeNull();
+  });
 });

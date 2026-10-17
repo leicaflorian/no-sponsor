@@ -109,3 +109,35 @@ html[data-nsp-mode='collapse'] .nsp-hit.nsp-open {
 html[data-nsp-mode='hide'] .nsp-hit {
   display: none !important;
 }
+
+/* ---------- YouTube: ads in the player ---------- */
+
+/* Black video, no advertiser card; Skip, its countdown, "Sponsorizzato" and the controls stay visible. */
+html[data-nsp-yt='on'] .html5-video-player.ad-showing video {
+  opacity: 0 !important;
+}
+
+html[data-nsp-yt='on'] .html5-video-player.ad-showing .ytp-ad-player-overlay-layout__player-card-container,
+html[data-nsp-yt='on'] .html5-video-player.ad-showing .ytp-visit-advertiser-link {
+  display: none !important;
+}
+
+/* Remaining time, written by src/sites/youtube.ts: no node is added to the player. */
+html[data-nsp-yt='on'] .html5-video-player.ad-showing[data-nsp-remaining]::after {
+  content: 'Annuncio · mancano ' attr(data-nsp-remaining) !important;
+  position: absolute !important;
+  top: 12px !important;
+  left: 12px !important;
+  z-index: 30 !important;
+  padding: 4px 8px !important;
+  border-radius: 4px !important;
+  background: #f59e0b !important;
+  color: #1c1917 !important;
+  font:
+    700 12px/1.2 system-ui,
+    -apple-system,
+    'Segoe UI',
+    sans-serif !important;
+  pointer-events: none !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25) !important;
+}
