@@ -1,0 +1,5 @@
+# worktree di Superpowers (using-git-worktrees)
+.worktrees/
+
+node_modules/
+.claude/settings.local.json
