@@ -1,0 +1,30 @@
+name: CI
+
+on:
+  push:
+    branches: [main, dev]
+  pull_request:
+
+jobs:
+  check:
+    # macOS rather than Linux: the expected e2e results (nsp-inset, visibility on sites
+    # that obfuscate labels) were recorded on macOS and depend on fonts and layout.
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run typecheck
+      - run: npm test
+      # No --with-deps: it only applies to Linux.
+      - run: npx playwright install chromium
+      - run: npm run test:e2e
+      - run: npm run zip
+      - uses: actions/upload-artifact@v4
+        with:
+          name: nosponsor-zip
+          path: .output/*.zip

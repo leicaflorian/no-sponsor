@@ -1,0 +1,11 @@
+.output/
+.wxt/
+tests/fixtures/
+node_modules/
+package-lock.json
+LICENSE
+.superpowers/
+.worktrees/
+.claude/
+.idea/
+*.md

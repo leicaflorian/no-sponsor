@@ -1,0 +1,36 @@
+{
+  "hits": [
+    {
+      "path": "html:nth-of-type(1) > body:nth-of-type(1) > div:nth-of-type(7) > div:nth-of-type(9) > div:nth-of-type(1) > div:nth-of-type(2) > div:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(2) > div:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(2) > div:nth-of-type(4) > div:nth-of-type(1)",
+      "reason": "ebay · etichetta \"sponsorizzato\"",
+      "inset": false,
+      "rel": true
+    },
+    {
+      "path": "html:nth-of-type(1) > body:nth-of-type(1) > div:nth-of-type(7) > div:nth-of-type(9) > div:nth-of-type(1) > div:nth-of-type(3) > div:nth-of-type(1) > div:nth-of-type(3) > div:nth-of-type(2) > ul:nth-of-type(1) > li:nth-of-type(31)",
+      "reason": "ebay · aria-labelledby",
+      "inset": false,
+      "rel": false
+    },
+    {
+      "path": "html:nth-of-type(1) > body:nth-of-type(1) > div:nth-of-type(7) > div:nth-of-type(9) > div:nth-of-type(1) > div:nth-of-type(3) > div:nth-of-type(1) > div:nth-of-type(3) > div:nth-of-type(2) > ul:nth-of-type(1) > li:nth-of-type(32)",
+      "reason": "ebay · aria-labelledby",
+      "inset": false,
+      "rel": false
+    },
+    {
+      "path": "html:nth-of-type(1) > body:nth-of-type(1) > div:nth-of-type(7) > div:nth-of-type(9) > div:nth-of-type(1) > div:nth-of-type(3) > div:nth-of-type(1) > div:nth-of-type(3) > div:nth-of-type(2) > ul:nth-of-type(1) > li:nth-of-type(42)",
+      "reason": "ebay · aria-labelledby",
+      "inset": false,
+      "rel": false
+    },
+    {
+      "path": "html:nth-of-type(1) > body:nth-of-type(1) > div:nth-of-type(7) > div:nth-of-type(9) > div:nth-of-type(1) > div:nth-of-type(3) > div:nth-of-type(1) > div:nth-of-type(3) > div:nth-of-type(2) > ul:nth-of-type(1) > li:nth-of-type(61)",
+      "reason": "ebay · aria-labelledby",
+      "inset": false,
+      "rel": false
+    }
+  ],
+  "badge": "5",
+  "mode": "highlight"
+}

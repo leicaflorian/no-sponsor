@@ -1,0 +1,38 @@
+{
+  "name": "nosponsor",
+  "version": "0.2.0",
+  "private": true,
+  "type": "module",
+  "license": "GPL-3.0-or-later",
+  "engines": {
+    "node": ">=22.12"
+  },
+  "scripts": {
+    "postinstall": "wxt prepare",
+    "dev": "wxt",
+    "build": "wxt build",
+    "zip": "wxt zip",
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:e2e": "wxt build && playwright test",
+    "test:e2e:legacy": "NSP_EXT=legacy playwright test",
+    "snapshot": "tsx scripts/snapshot.ts",
+    "record-expected": "tsx scripts/record-expected.ts"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@playwright/test": "^1.64.1",
+    "@types/node": "^26.6.5",
+    "eslint": "^10.13.0",
+    "eslint-config-prettier": "^10.1.8",
+    "happy-dom": "^21.0.3",
+    "prettier": "^3.9.10",
+    "tsx": "^4.23.15",
+    "typescript": "~6.0",
+    "typescript-eslint": "^8.71.2",
+    "vitest": "^5.0.5",
+    "wxt": "^0.21.4"
+  }
+}

@@ -1,5 +1,11 @@
-# worktree di Superpowers (using-git-worktrees)
+# Superpowers worktrees (using-git-worktrees)
 .worktrees/
 
 node_modules/
 .claude/settings.local.json
+
+# WXT, Playwright
+.output/
+.wxt/
+test-results/
+playwright-report/

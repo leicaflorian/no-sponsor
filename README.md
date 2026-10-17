@@ -1,43 +1,96 @@
 # NoSponsor
 
-Estensione Chrome (Manifest V3) che trova i contenuti sponsorizzati e li **evidenzia**, li **comprime** in una barra cliccabile oppure li **nasconde**.
+Chrome extension (Manifest V3) that finds sponsored content and **highlights** it, **collapses** it into a clickable bar, or **hides** it.
 
-Rilevatori dedicati: **Google, Amazon, Subito.it, eBay**. Sugli altri siti c'è un rilevamento generico (disattivabile) basato sulle etichette "Sponsorizzato", "Sponsored", "Pubblicità"… e sugli slot pubblicitari standard (Google Publisher Tag, AdSense).
+Dedicated detectors: **Google, Amazon, Subito.it, eBay**. On other sites there is a generic detection (can be turned off) based on the labels "Sponsorizzato", "Sponsored", "Pubblicità"... and on standard ad slots (Google Publisher Tag, AdSense).
 
-## Installazione (sviluppo)
+The UI texts are in Italian for now; they will be localized (it/en) in Phase 6. The project documentation lives in the owner's vault, outside the repo.
 
-1. Estrai lo zip.
-2. Apri `chrome://extensions` e attiva **Modalità sviluppatore**.
-3. **Carica estensione non pacchettizzata** → seleziona la cartella `nosponsor`.
-4. Ricarica le schede già aperte.
+## Requirements
 
-## Struttura
+Node 22 (version in `.nvmrc`): with nvm, `nvm use` is enough.
+
+## Development
 
 ```
-manifest.json
-background.js        contatore sull'icona, per scheda
-src/detectors.js     ← regole per sito: quasi tutta la manutenzione si fa qui
-src/content.js       scansione, MutationObserver, impostazioni
-src/content.css      le tre modalità
-popup/               modalità, attivazione per sito, rilevamento generico
+npm install     # also runs `wxt prepare`, required by `npm run typecheck`
+npm run dev     # opens Chrome with the extension loaded, with automatic reload
 ```
 
-## Come funziona
+## Build and load in Chrome
 
-- Il content script **non rimuove nodi**: aggiunge la classe `.nsp-hit` e il CSS fa il resto in base a `<html data-nsp-mode="highlight|collapse|hide|off">`. Così React/Vue non si rompono e il cambio modalità è istantaneo.
-- Tre strategie per sito: **selettori noti**, **etichette testuali** (risalendo al contenitore della card) e, sui siti che offuscano, il **testo realmente visibile** ricostruito nell'ordine a schermo (lettere nascoste via CSS o riordinate con `order`) più `aria-labelledby`.
-- Un `MutationObserver` con debounce copre scroll infinito e contenuti caricati dopo.
-- Ogni elemento marcato ha `data-nsp-reason` con la regola che l'ha trovato: utile in DevTools per capire falsi positivi.
+```
+npm run build
+```
 
-## Debug rapido
+Then in `chrome://extensions` turn on **Developer mode**, click **Load unpacked** and choose `.output/chrome-mv3`. Reload the tabs that are already open.
 
-In DevTools su una pagina:
+## Scripts
+
+| Script | What it does |
+|---|---|
+| `npm run dev` | Chrome with the extension, automatic reload |
+| `npm run build` | Build into `.output/chrome-mv3` |
+| `npm run zip` | Zip of the build in `.output/` |
+| `npm run lint` | ESLint |
+| `npm run typecheck` | `tsc --noEmit` |
+| `npm run format` | Prettier |
+| `npm test` | Unit tests (Vitest) |
+| `npm run test:e2e` | Build and e2e tests (Playwright) |
+| `npm run test:e2e:legacy` | The same e2e tests against 0.1.0 (needs the local tag `v0.1.0`) |
+| `npm run snapshot` | Saves a real page as a fixture |
+| `npm run record-expected` | Records the expected results of a fixture (needs the local tag `v0.1.0`) |
+
+## Structure of `src/`
+
+```
+entrypoints/
+  background.ts      per-tab counter on the icon
+  content/           content script (index.ts) and the three modes (style.css)
+  popup/             mode, per-site activation, generic detection
+engine/              scanning, marking, containers, text and visibility
+rules/               detectors.ts: per-site rules, almost all maintenance happens here
+shared/              shared settings and messages
+```
+
+## Tests
+
+- **Unit** (`tests/unit`, `npm test`): engine and rules, in happy-dom.
+- **E2e** (`tests/e2e`, `npm run test:e2e`): Chromium with the built extension, on real pages saved in `tests/fixtures/<site>/<page>.html`. Next to each one there is `<page>.expected.json`, the result recorded from 0.1.0: the build must produce an identical one. `npm run test:e2e:legacy` runs the same tests against 0.1.0.
+- `test:e2e:legacy` and `record-expected` read 0.1.0 from the local tag `v0.1.0`: create it with `git tag v0.1.0 57dc693` (or `git fetch --tags`, once the tag is published).
+- The expected results were recorded on **macOS** and depend on fonts and layout (`nsp-inset`, visibility on sites that obfuscate): on Linux they may not match. That is why CI runs on `macos-latest`.
+
+### Adding or redoing a saved page
+
+```
+npm run snapshot -- <site> <page> <url> [--manual]
+npm run record-expected -- <site>/<page>
+```
+
+`snapshot` saves the cleaned-up page (no scripts or images) in `tests/fixtures/<site>/`. With `--manual` the browser opens and you prepare the page by hand (login, cookies, scroll) before saving. If the site blocks Playwright's Chromium, use `NSP_CHANNEL=chrome` for the installed Chrome. `record-expected` records the expected results, to be checked by hand before the commit.
+
+Still to be saved, by the owner: `google/ricerca` and a new `amazon/prodotto`.
+
+## How it works
+
+- The content script **does not remove nodes**: it adds the `.nsp-hit` class and the CSS does the rest based on `<html data-nsp-mode="highlight|collapse|hide|off">`. This way React/Vue don't break and switching mode is instant.
+- Three strategies per site: **known selectors**, **text labels** (going up to the card's container) and, on sites that obfuscate, the **actually visible text** rebuilt in on-screen order (letters hidden via CSS or reordered with `order`) plus `aria-labelledby`.
+- A debounced `MutationObserver` covers infinite scroll and content loaded later.
+- Every marked element has `data-nsp-reason` with the rule that found it: useful in DevTools to understand false positives.
+
+## Quick debugging
+
+In DevTools on a page:
 
 ```js
 [...document.querySelectorAll('.nsp-hit')].map(e => e.dataset.nspReason)
 ```
 
-## Note
+## Notes
 
-- Su Subito "annuncio" è la parola normale per un'inserzione, quindi non è tra le etichette; "Vetrina" e "In evidenza" (promozioni a pagamento) sì.
-- I selettori dei siti cambiano nel tempo: se qualcosa smette di funzionare, ispeziona la card e aggiorna `src/detectors.js`.
+- On Subito "annuncio" is the ordinary word for a listing, so it is not among the labels; "Vetrina" and "In evidenza" (paid promotions) are.
+- Site selectors change over time: if something stops working, inspect the card and update `src/rules/detectors.ts`.
+
+## License
+
+GPL-3.0-or-later (see `LICENSE`).
