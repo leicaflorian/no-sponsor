@@ -80,6 +80,18 @@ describe('scan', () => {
       scan(document.body, site('amazon'));
       expect(hits().map((el) => el.id)).toEqual(['tile']);
     });
+
+    it('a widget label in a gwm window-pane card marks the whole card', () => {
+      // The gwm tiles have no asin-container class: the label reaches the enclosing .a-cardui.
+      document.body.innerHTML = page(
+        '<div class="a-cardui" id="pane"><div class="a-cardui-body _gwm-asin-tile_style_windowPaneContainer__3s9TI">' +
+          `<div class="_gwm-asin-tile_style_windowPaneSponsoredBadgeContainer__3LwvE"><div class="hybrid-widget-sponsored-label">${label}</div></div>` +
+          '<span>Per te</span></div></div>' +
+          widgetCard('other', false),
+      );
+      scan(document.body, site('amazon'));
+      expect(hits().map((el) => el.id)).toEqual(['pane']);
+    });
   });
 
   it('an ancestor marked after its children absorbs their marks', () => {

@@ -102,6 +102,7 @@ export const SITES: SiteDetector[] = [
       '.a-carousel-card',
       // Home and widget cards: a single product first, then the whole card. Without these the
       // label only reaches a .celwidget wrapping the whole page section, too large to mark.
+      // Note: being earlier in the list, a small .a-cardui also outranks a carousel or result inside it.
       '[class*="_asin-container__"]',
       '.a-cardui',
       '.a-carousel-container',
