@@ -1,6 +1,8 @@
-// YouTube: while an ad plays (`ad-showing` on the player) the video is muted and the remaining time is written
-// on the player; the CSS (html[data-nsp-yt="on"]) blacks out the video and shows that time.
-// Only reads currentTime/duration: never seeks, changes speed or clicks.
+// YouTube: while an ad plays (`ad-showing` on the player) the video is muted, the remaining time is written
+// on the player and Skip is clicked as soon as it shows; the CSS (html[data-nsp-yt="on"]) blacks out the video
+// and shows that time. Only reads currentTime/duration: never seeks or changes speed.
+
+import { isVisible } from '../engine/visibility';
 
 export const RESTORE_DELAY_MS = 300; // two ads in a row can drop `ad-showing` for an instant
 export const TICK_MS = 500;
@@ -8,6 +10,7 @@ export const USER_INPUT_MS = 1000; // an unmute this soon after a click or key p
 
 const PLAYER = '.html5-video-player';
 const INPUTS = ['pointerdown', 'keydown'] as const;
+const SKIP = '.ytp-skip-ad-button, .ytp-ad-skip-button-modern, .ytp-ad-skip-button';
 
 // Seconds as m:ss, rounded up; null when unknown (the ad has not loaded yet).
 export function formatRemaining(seconds: number): string | null {
@@ -22,6 +25,7 @@ export class AdVeil {
   private tick: ReturnType<typeof setInterval> | undefined;
   private restore: ReturnType<typeof setTimeout> | undefined;
   private lastInput = -Infinity;
+  private skipped = new WeakSet<Element>();
 
   constructor(private readonly player: HTMLElement) {}
 
@@ -102,11 +106,21 @@ export class AdVeil {
       this.start();
       return;
     }
+    this.skip();
     const v = this.video;
     const t = v ? formatRemaining(v.duration - v.currentTime) : null;
     if (t) this.player.dataset['nspRemaining'] = t;
     else delete this.player.dataset['nspRemaining'];
   };
+
+  // Skip is in the DOM, hidden, during the countdown that precedes it: click it once it shows.
+  private skip(): void {
+    for (const button of this.player.querySelectorAll<HTMLElement>(SKIP)) {
+      if (this.skipped.has(button) || !isVisible(button, this.player)) continue;
+      this.skipped.add(button);
+      button.click();
+    }
+  }
 }
 
 // Veils every player on the page, including those YouTube creates later.

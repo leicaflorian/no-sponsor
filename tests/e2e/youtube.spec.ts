@@ -47,6 +47,25 @@ test('veils the ad and keeps Skip visible', async () => {
   await expect(page.locator('.ytp-skip-ad-button')).toBeVisible();
 });
 
+test('clicks Skip as soon as it shows', async () => {
+  await page.evaluate(() => {
+    const button = document.querySelector('.ytp-skip-ad-button') as HTMLElement;
+    button.style.display = 'none';
+    button.addEventListener(
+      'click',
+      () => (document.body.dataset['skips'] = String(Number(document.body.dataset['skips'] ?? 0) + 1)),
+    );
+  });
+  const skips = () => page.evaluate(() => document.body.dataset['skips'] ?? '0');
+  await setAd(true);
+  await page.waitForTimeout(600);
+  expect(await skips()).toBe('0');
+  await page.evaluate(() => ((document.querySelector('.ytp-skip-ad-button') as HTMLElement).style.display = ''));
+  await expect.poll(skips, { timeout: 1_000 }).toBe('1');
+  await page.waitForTimeout(600);
+  expect(await skips()).toBe('1');
+});
+
 test('mutes again when the page turns the audio back on during the ad', async () => {
   await setAd(true);
   await expect.poll(async () => (await state()).muted, { timeout: 1_000 }).toBe(true);

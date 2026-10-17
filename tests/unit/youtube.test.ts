@@ -1,5 +1,12 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { AdVeil, formatRemaining, RESTORE_DELAY_MS, startYouTube, TICK_MS, USER_INPUT_MS } from '../../src/sites/youtube';
+import {
+  AdVeil,
+  formatRemaining,
+  RESTORE_DELAY_MS,
+  startYouTube,
+  TICK_MS,
+  USER_INPUT_MS,
+} from '../../src/sites/youtube';
 
 function setup() {
   document.body.innerHTML = '<div id="movie_player" class="html5-video-player"><video></video></div>';
@@ -181,6 +188,79 @@ describe('AdVeil', () => {
     ad(veil, player, false);
     vi.advanceTimersByTime(RESTORE_DELAY_MS);
     expect(next.muted).toBe(false);
+  });
+});
+
+describe('AdVeil skip', () => {
+  beforeEach(() => vi.useFakeTimers());
+  afterEach(() => vi.useRealTimers());
+
+  // YouTube's Skip button, hidden during the countdown that precedes it.
+  function addSkip(player: HTMLElement, hidden: boolean, cls = 'ytp-skip-ad-button') {
+    const button = document.createElement('button');
+    button.className = cls;
+    if (hidden) button.style.display = 'none';
+    player.append(button);
+    const onClick = vi.fn();
+    button.addEventListener('click', onClick);
+    return { button, onClick };
+  }
+
+  it.each(['ytp-skip-ad-button', 'ytp-ad-skip-button-modern', 'ytp-ad-skip-button'])(
+    'clicks .%s as soon as it is visible',
+    (cls) => {
+      const { player } = setup();
+      const { button, onClick } = addSkip(player, true, cls);
+      const veil = new AdVeil(player);
+      ad(veil, player, true);
+      vi.advanceTimersByTime(TICK_MS);
+      expect(onClick).not.toHaveBeenCalled();
+      button.style.display = '';
+      vi.advanceTimersByTime(TICK_MS);
+      expect(onClick).toHaveBeenCalledTimes(1);
+    },
+  );
+
+  it('clicks a button that is already visible when the ad starts', () => {
+    const { player } = setup();
+    const { onClick } = addSkip(player, false);
+    ad(new AdVeil(player), player, true);
+    expect(onClick).toHaveBeenCalledTimes(1);
+  });
+
+  it('clicks each button only once', () => {
+    const { player } = setup();
+    const { onClick } = addSkip(player, false);
+    ad(new AdVeil(player), player, true);
+    vi.advanceTimersByTime(TICK_MS * 4);
+    expect(onClick).toHaveBeenCalledTimes(1);
+  });
+
+  it('does not take its own click for the user unmuting', () => {
+    const { player, video } = setup();
+    const { button } = addSkip(player, false);
+    button.addEventListener('click', () => {
+      video.muted = false;
+      video.dispatchEvent(new Event('volumechange'));
+    });
+    ad(new AdVeil(player), player, true);
+    expect(video.muted).toBe(true);
+  });
+
+  it('does not click outside an ad', () => {
+    const { player } = setup();
+    const { onClick } = addSkip(player, false);
+    new AdVeil(player).sync(true);
+    vi.advanceTimersByTime(TICK_MS);
+    expect(onClick).not.toHaveBeenCalled();
+  });
+
+  it('does not click while the site is disabled', () => {
+    const { player } = setup();
+    const { onClick } = addSkip(player, false);
+    ad(new AdVeil(player), player, true, false);
+    vi.advanceTimersByTime(TICK_MS);
+    expect(onClick).not.toHaveBeenCalled();
   });
 });
 
