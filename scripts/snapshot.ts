@@ -95,6 +95,13 @@ try {
         if (el.hasAttribute('aria-label')) el.setAttribute('aria-label', neutralLocation);
         if (el.children.length === 0) el.textContent = neutralLocation;
       });
+      // Google's footer shows the postcode derived from the IP ("35018 - Dal tuo indirizzo IP").
+      const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
+      for (let n = walker.nextNode(); n; n = walker.nextNode()) {
+        if (!/^\s*\d{5}\s*$/.test(n.nodeValue ?? '')) continue;
+        const around = n.parentElement?.parentElement?.textContent ?? '';
+        if (/indirizzo IP|IP address/i.test(around)) n.nodeValue = '00100';
+      }
       document.querySelectorAll('script, noscript, base').forEach((e) => e.remove());
       document.querySelectorAll('iframe').forEach((f) => {
         if (f.closest(adSlot)) {
@@ -136,6 +143,10 @@ try {
     JSON.stringify({ url: finalUrl, savedAt: new Date().toISOString(), snapshotVersion: 1 }, null, 2) + '\n',
   );
   console.log(`Saved ${site}/${name}: ${(html.length / 1024).toFixed(0)} KB, final url ${finalUrl}`);
+  // Local results (e.g. Google's local pack) follow the recorder's location and are not
+  // scrubbed automatically: list what looks like an address so it can be neutralized by hand.
+  const addresses = [...new Set((html.match(/\b\d{5}[ +][A-Z][\w'.]+/g) ?? []).map((a) => a.replace('+', ' ')))];
+  if (addresses.length) console.warn(`Check these possible addresses before committing: ${addresses.join(', ')}`);
 } finally {
   await context.close();
   rmSync(profile, { recursive: true, force: true });

@@ -1,5 +1,60 @@
 {
-  "hits": [],
-  "badge": "",
+  "hits": [
+    {
+      "path": "html:nth-of-type(1) > body:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(2) > div:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(1)",
+      "reason": "amazon · [id^=\"ape_\"][id$=\"_placement\"]",
+      "inset": true,
+      "rel": false
+    },
+    {
+      "path": "html:nth-of-type(1) > body:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(2) > div:nth-of-type(5) > div:nth-of-type(1) > div:nth-of-type(15) > div:nth-of-type(1) > div:nth-of-type(1)",
+      "reason": "amazon · [id^=\"ape_\"][id$=\"_placement\"]",
+      "inset": false,
+      "rel": false
+    },
+    {
+      "path": "html:nth-of-type(1) > body:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(2) > div:nth-of-type(5) > div:nth-of-type(5) > div:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(1)",
+      "reason": "amazon · [id^=\"ape_\"][id$=\"_placement\"]",
+      "inset": false,
+      "rel": false
+    },
+    {
+      "path": "html:nth-of-type(1) > body:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(2) > div:nth-of-type(13) > div:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(1)",
+      "reason": "amazon · #sp_detail",
+      "inset": false,
+      "rel": false
+    },
+    {
+      "path": "html:nth-of-type(1) > body:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(2) > div:nth-of-type(31) > div:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(1)",
+      "reason": "amazon · #sp_detail2",
+      "inset": false,
+      "rel": false
+    },
+    {
+      "path": "html:nth-of-type(1) > body:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(2) > div:nth-of-type(32) > div:nth-of-type(1) > div:nth-of-type(1)",
+      "reason": "amazon · etichetta \"sponsorizzato\"",
+      "inset": false,
+      "rel": true
+    },
+    {
+      "path": "html:nth-of-type(1) > body:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(2) > div:nth-of-type(34) > div:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(1)",
+      "reason": "amazon · etichetta \"sponsorizzato\"",
+      "inset": false,
+      "rel": false
+    },
+    {
+      "path": "html:nth-of-type(1) > body:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(2) > div:nth-of-type(37) > div:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(1)",
+      "reason": "amazon · [id^=\"ape_\"][id$=\"_placement\"]",
+      "inset": true,
+      "rel": false
+    },
+    {
+      "path": "html:nth-of-type(1) > body:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(2) > div:nth-of-type(39) > div:nth-of-type(1) > div:nth-of-type(1)",
+      "reason": "amazon · [id^=\"ape_\"][id$=\"_placement\"]",
+      "inset": false,
+      "rel": false
+    }
+  ],
+  "badge": "9",
   "mode": "highlight"
 }
