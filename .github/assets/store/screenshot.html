@@ -1,0 +1,77 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8" />
+<!-- Frame of the Chrome Web Store screenshots (1280 × 800): a caption above a browser window.
+     scripts/store-assets.ts fills the placeholders in double braces. -->
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { width: 1280px; height: 800px; }
+  body {
+    background:
+      radial-gradient(900px 420px at 85% 0%, rgba(245, 158, 11, 0.16), transparent 70%),
+      #1c1917;
+    color: #fafaf9;
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    overflow: hidden;
+    position: relative;
+  }
+  header { display: flex; align-items: center; gap: 22px; padding: 34px 60px 0; height: 150px; }
+  header svg { flex: none; }
+  h1 { font-size: 40px; font-weight: 800; letter-spacing: -0.02em; line-height: 1.1; }
+  h1 b { color: #f59e0b; }
+  header p { margin-top: 8px; font-size: 21px; color: #d6d3d1; }
+  .window {
+    position: absolute; left: 60px; right: 60px; top: 150px; bottom: 0;
+    border-radius: 14px 14px 0 0; overflow: hidden;
+    background: #fff; border: 1px solid #3a3330; border-bottom: none;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.45);
+  }
+  .bar {
+    height: 40px; background: #292524; display: flex; align-items: center; gap: 8px; padding: 0 16px;
+  }
+  .dot { width: 12px; height: 12px; border-radius: 50%; background: #57534e; }
+  .url {
+    margin-left: 18px; flex: 1; height: 26px; border-radius: 13px; background: #1c1917;
+    color: #a8a29e; font-size: 14px; display: flex; align-items: center; padding: 0 14px;
+  }
+  .ext { width: 22px; height: 22px; }
+  .shot { display: block; width: 100%; }
+  .popup {
+    position: absolute; top: 46px; right: 10px; width: 300px;
+    border-radius: 10px; overflow: hidden; border: 1px solid #d6d3d1;
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.35);
+  }
+  .popup img { display: block; width: 100%; }
+  .popup:empty { display: none; }
+</style>
+</head>
+<body>
+  <header>
+    <svg width="72" height="72" viewBox="0 0 128 128" aria-hidden="true">
+      <rect width="128" height="128" rx="24" fill="#0c0a09" />
+      <rect x="30" y="42" width="68" height="44" rx="7" fill="#78716c" />
+      <circle cx="64" cy="64" r="52" fill="none" stroke="#f59e0b" stroke-width="18" />
+      <line x1="27" y1="27" x2="101" y2="101" stroke="#f59e0b" stroke-width="18" />
+    </svg>
+    <div>
+      <h1>{{TITLE}}</h1>
+      <p>{{TEXT}}</p>
+    </div>
+  </header>
+  <div class="window">
+    <div class="bar">
+      <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+      <span class="url">{{HOST}}</span>
+      <svg class="ext" viewBox="0 0 128 128" aria-hidden="true">
+        <rect width="128" height="128" rx="24" fill="#0c0a09" />
+        <rect x="30" y="42" width="68" height="44" rx="7" fill="#78716c" />
+        <circle cx="64" cy="64" r="52" fill="none" stroke="#f59e0b" stroke-width="18" />
+        <line x1="27" y1="27" x2="101" y2="101" stroke="#f59e0b" stroke-width="18" />
+      </svg>
+    </div>
+    <img class="shot" src="{{SHOT}}" alt="" />
+    <div class="popup">{{POPUP}}</div>
+  </div>
+</body>
+</html>

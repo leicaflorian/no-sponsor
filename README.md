@@ -44,6 +44,7 @@ Then in `chrome://extensions` turn on **Developer mode**, click **Load unpacked*
 | `npm run test:e2e:legacy` | The same e2e tests against 0.1.0 (needs the local tag `v0.1.0`) |
 | `npm run snapshot` | Saves a real page as a fixture |
 | `npm run record-expected` | Records the expected results of a fixture from 0.1.0 (needs the local tag `v0.1.0`); with `--build`, from the current build |
+| `npm run store-assets` | Build, then the Chrome Web Store screenshots and promo tiles in `.output/store-assets/` (macOS) |
 
 ## Structure of `src/`
 

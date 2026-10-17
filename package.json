@@ -20,7 +20,8 @@
     "test:e2e:legacy": "NSP_EXT=legacy playwright test",
     "snapshot": "tsx scripts/snapshot.ts",
     "record-expected": "tsx scripts/record-expected.ts",
-    "icons": "tsx scripts/icons.ts"
+    "icons": "tsx scripts/icons.ts",
+    "store-assets": "wxt build && tsx scripts/store-assets.ts"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
