@@ -53,6 +53,35 @@ describe('scan', () => {
     expect(hits()).toHaveLength(1);
   });
 
+  describe('Amazon home cards (inside a .celwidget too large to be a container)', () => {
+    // Markup reduced from the owner's personalised home (class names as Amazon renders them).
+    const filler = `<p>${'x'.repeat(16000)}</p>`;
+    const label = '<div class="adFeedbackMainComponent_1"><span>Sponsorizzato</span></div>';
+    const widgetCard = (id: string, sponsored: boolean) =>
+      `<div class="a-cardui _npack-asin-card_style_mosaic-card__1C-_R" id="${id}">` +
+      `<div class="a-cardui-header">${sponsored ? `<div class="hybrid-widget-sponsored-label">${label}</div>` : ''}` +
+      '<h2>Continua esplorazione</h2></div><div class="a-cardui-body">prodotti</div></div>';
+    const tile = (id: string, sponsored: boolean) =>
+      `<div class="a-section _npack-asin-card_style_asin-container__EaHh8" id="${id}">` +
+      `${sponsored ? `<div class="hybrid-sponsored-label">${label}</div>` : ''}<span>20% di sconto</span></div>`;
+    const page = (inner: string) => `<div id="a-page"><div class="celwidget">${inner}${filler}</div></div>`;
+
+    it('a label in the card header marks the whole card', () => {
+      document.body.innerHTML = page(widgetCard('card', true) + widgetCard('other', false));
+      scan(document.body, site('amazon'));
+      expect(hits().map((el) => el.id)).toEqual(['card']);
+      expect(hits()[0]?.dataset['nspReason']).toBe('amazon · etichetta "sponsorizzato"');
+    });
+
+    it('a label on a single product marks only that product, not its card', () => {
+      document.body.innerHTML = page(
+        `<div class="a-cardui" id="card"><div class="a-cardui-body">${tile('tile', true)}${tile('plain', false)}</div></div>`,
+      );
+      scan(document.body, site('amazon'));
+      expect(hits().map((el) => el.id)).toEqual(['tile']);
+    });
+  });
+
   it('an ancestor marked after its children absorbs their marks', () => {
     // [data-google-query-id] comes before [id^="div-gpt-ad"] in AD_SELECTORS: the child is marked first.
     document.body.innerHTML = '<div id="div-gpt-ad-2"><div data-google-query-id="q" id="child"></div></div>';

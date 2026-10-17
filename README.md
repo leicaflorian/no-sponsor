@@ -39,7 +39,7 @@ Then in `chrome://extensions` turn on **Developer mode**, click **Load unpacked*
 | `npm run test:e2e` | Build and e2e tests (Playwright) |
 | `npm run test:e2e:legacy` | The same e2e tests against 0.1.0 (needs the local tag `v0.1.0`) |
 | `npm run snapshot` | Saves a real page as a fixture |
-| `npm run record-expected` | Records the expected results of a fixture (needs the local tag `v0.1.0`) |
+| `npm run record-expected` | Records the expected results of a fixture from 0.1.0 (needs the local tag `v0.1.0`); with `--build`, from the current build |
 
 ## Structure of `src/`
 
@@ -68,6 +68,8 @@ npm run record-expected -- <site>/<page>
 ```
 
 `snapshot` saves the cleaned-up page (no scripts or images) in `tests/fixtures/<site>/`. With `--manual` the browser opens with a fresh profile and you prepare the page by hand (captcha, cookies, scrolling until the sponsored blocks load) before saving; never log in. If the site blocks Playwright's Chromium, use `NSP_CHANNEL=chrome` for the installed Chrome. `record-expected` records the expected results, to be checked by hand before the commit.
+
+The expected results describe what 0.1.0 does, unless the behaviour was changed on purpose: then run `npm run build` and `npm run record-expected -- --build <site>/<page>`, which records the current build and writes `"since": "<version>"` in the file. `test:e2e:legacy` skips those pages. A page may also be hand-written when the real one cannot be saved without personal data (`amazon/home-personalizzata`, reduced from a logged-in home: `"handWritten": true` in its `.meta.json`).
 
 The repository is public, so a saved page must not contain personal data. The script replaces Amazon's delivery location and Google's IP-based postcode, and prints any address-like strings left (for example Google's local results, which follow your location): neutralize them by hand before committing.
 

@@ -100,6 +100,10 @@ export const SITES: SiteDetector[] = [
     container: [
       '[data-component-type="s-search-result"]',
       '.a-carousel-card',
+      // Home and widget cards: a single product first, then the whole card. Without these the
+      // label only reaches a .celwidget wrapping the whole page section, too large to mark.
+      '[class*="_asin-container__"]',
+      '.a-cardui',
       '.a-carousel-container',
       '.s-result-item',
       '.celwidget',

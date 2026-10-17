@@ -19,6 +19,8 @@ declare const chrome: {
 
 export type Hit = { path: string; reason: string; inset: boolean; rel: boolean };
 export type Recording = { hits: Hit[]; badge: string; mode: string };
+// `since`: the version the expected result was recorded from, when newer than 0.1.0 (the legacy run skips it).
+export type Expected = Recording & { since?: string };
 export type Settings = { mode: string; generic: boolean; disabledHosts: string[] };
 export type Fixture = { site: string; name: string };
 
