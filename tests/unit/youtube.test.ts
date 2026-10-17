@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { AdVeil, formatRemaining, RESTORE_DELAY_MS, startYouTube, TICK_MS } from '../../src/sites/youtube';
+import { AdVeil, formatRemaining, RESTORE_DELAY_MS, startYouTube, TICK_MS, USER_INPUT_MS } from '../../src/sites/youtube';
 
 function setup() {
   document.body.innerHTML = '<div id="movie_player" class="html5-video-player"><video></video></div>';
@@ -16,6 +16,12 @@ function setTime(video: HTMLVideoElement, duration: number, currentTime: number)
 
 // The user clicks the speaker icon.
 function userSetsMuted(video: HTMLVideoElement, muted: boolean) {
+  video.dispatchEvent(new Event('pointerdown', { bubbles: true }));
+  playerSetsMuted(video, muted);
+}
+
+// YouTube's player applies its own audio state, e.g. when it loads the ad's source.
+function playerSetsMuted(video: HTMLVideoElement, muted: boolean) {
   video.muted = muted;
   video.dispatchEvent(new Event('volumechange'));
 }
@@ -77,6 +83,27 @@ describe('AdVeil', () => {
     ad(veil, player, false);
     vi.advanceTimersByTime(RESTORE_DELAY_MS);
     expect(video.muted).toBe(false);
+  });
+
+  it('mutes again when YouTube turns the audio back on by itself', () => {
+    const { player, video } = setup();
+    const veil = new AdVeil(player);
+    ad(veil, player, true);
+    playerSetsMuted(video, false);
+    expect(video.muted).toBe(true);
+    ad(veil, player, false);
+    vi.advanceTimersByTime(RESTORE_DELAY_MS);
+    expect(video.muted).toBe(false);
+  });
+
+  it('treats an unmute long after the last input as YouTube, not the user', () => {
+    const { player, video } = setup();
+    const veil = new AdVeil(player);
+    ad(veil, player, true);
+    video.dispatchEvent(new Event('pointerdown', { bubbles: true }));
+    vi.advanceTimersByTime(USER_INPUT_MS + 1);
+    playerSetsMuted(video, false);
+    expect(video.muted).toBe(true);
   });
 
   it('mutes again at the next ad after the user unmuted one', () => {

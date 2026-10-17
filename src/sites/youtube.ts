@@ -4,8 +4,10 @@
 
 export const RESTORE_DELAY_MS = 300; // two ads in a row can drop `ad-showing` for an instant
 export const TICK_MS = 500;
+export const USER_INPUT_MS = 1000; // an unmute this soon after a click or key press is the user's
 
 const PLAYER = '.html5-video-player';
+const INPUTS = ['pointerdown', 'keydown'] as const;
 
 // Seconds as m:ss, rounded up; null when unknown (the ad has not loaded yet).
 export function formatRemaining(seconds: number): string | null {
@@ -19,6 +21,7 @@ export class AdVeil {
   private mutedByUs = false;
   private tick: ReturnType<typeof setInterval> | undefined;
   private restore: ReturnType<typeof setTimeout> | undefined;
+  private lastInput = -Infinity;
 
   constructor(private readonly player: HTMLElement) {}
 
@@ -47,12 +50,14 @@ export class AdVeil {
       this.mutedByUs = true;
     }
     video.addEventListener('volumechange', this.onVolume);
+    for (const type of INPUTS) window.addEventListener(type, this.onInput, true);
     this.update();
     this.tick = setInterval(this.update, TICK_MS);
   }
 
   private stop(delay: number): void {
     this.video?.removeEventListener('volumechange', this.onVolume);
+    for (const type of INPUTS) window.removeEventListener(type, this.onInput, true);
     clearInterval(this.tick);
     this.tick = undefined;
     delete this.player.dataset['nspRemaining'];
@@ -76,9 +81,18 @@ export class AdVeil {
     this.mutedByUs = false;
   }
 
+  private onInput = (): void => {
+    this.lastInput = Date.now();
+  };
+
   // The user turned the audio back on during the ad: leave it on until the next break.
+  // Without a recent click or key press it was YouTube's player, which applies its own audio state
+  // when it loads the ad: mute again.
   private onVolume = (): void => {
-    if (this.video && !this.video.muted) this.mutedByUs = false;
+    const video = this.video;
+    if (!video || video.muted || !this.mutedByUs) return;
+    if (Date.now() - this.lastInput <= USER_INPUT_MS) this.mutedByUs = false;
+    else video.muted = true;
   };
 
   private update = (): void => {

@@ -47,6 +47,16 @@ test('veils the ad and keeps Skip visible', async () => {
   await expect(page.locator('.ytp-skip-ad-button')).toBeVisible();
 });
 
+test('mutes again when the page turns the audio back on during the ad', async () => {
+  await setAd(true);
+  await expect.poll(async () => (await state()).muted, { timeout: 1_000 }).toBe(true);
+  // What YouTube's player does when it loads the ad: no click or key press involved.
+  await page.evaluate(() => {
+    (document.querySelector('#movie_player video') as HTMLVideoElement).muted = false;
+  });
+  await expect.poll(async () => (await state()).muted, { timeout: 1_000 }).toBe(true);
+});
+
 test('restores everything when the ad ends', async () => {
   await setAd(true);
   await expect.poll(async () => (await state()).muted, { timeout: 1_000 }).toBe(true);
