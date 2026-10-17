@@ -36,16 +36,60 @@ describe('scan', () => {
   });
 
   it('selectors: div-gpt-ad with GENERIC', () => {
-    document.body.innerHTML = '<div id="div-gpt-ad-1"></div>';
+    document.body.innerHTML = '<div id="div-gpt-ad-1"><iframe></iframe></div>';
     scan(document.body, GENERIC);
     const ad = document.getElementById('div-gpt-ad-1') as HTMLElement;
     expect(ad.classList.contains('nsp-hit')).toBe(true);
     expect(ad.dataset['nspReason']).toBe('generic · [id^="div-gpt-ad"]');
   });
 
+  describe('empty ad slots', () => {
+    // Google leaves #tads/#tadsb/#bottomads in the page even when there are no ads,
+    // holding only empty placeholder divs: marking them shows an empty banner.
+    const emptySlot = (id: string) =>
+      `<div id="${id}"><div class="GUyUUb" data-hb="t"><div></div></div><div class="GUyUUb" data-hb="b"><div> </div></div></div>`;
+
+    it('Google: empty #tads, #tadsb and #bottomads are not marked', () => {
+      document.body.innerHTML = `${emptySlot('tads')}<div id="bottomads">${emptySlot('tadsb')}</div>`;
+      scan(document.body, site('google'));
+      expect(hits()).toHaveLength(0);
+    });
+
+    it('Google: #tads with an ad in it is marked', () => {
+      document.body.innerHTML = '<div id="tads"><div class="GUyUUb"><a href="#">Negozio</a></div></div>';
+      scan(document.body, site('google'));
+      expect(hits().map((el) => el.id)).toEqual(['tads']);
+    });
+
+    it('an empty slot is marked once content is added to it', () => {
+      document.body.innerHTML = emptySlot('bottomads');
+      const slot = document.getElementById('bottomads') as HTMLElement;
+      scan(document.body, site('google'));
+      expect(hits()).toHaveLength(0);
+      // what the MutationObserver does: scan only the added node
+      const ad = document.createElement('div');
+      ad.innerHTML = '<a href="#">Negozio</a>';
+      slot.firstElementChild?.appendChild(ad);
+      scan(ad, site('google'));
+      expect(hits().map((el) => el.id)).toEqual(['bottomads']);
+    });
+
+    it('a slot holding only an iframe or an image counts as filled', () => {
+      document.body.innerHTML = '<div id="div-gpt-ad-4"><iframe></iframe></div><ins class="adsbygoogle" id="ins"><img></ins>';
+      scan(document.body, GENERIC);
+      expect(hits().map((el) => el.id)).toEqual(['div-gpt-ad-4', 'ins']);
+    });
+
+    it('an empty GPT slot is not marked', () => {
+      document.body.innerHTML = '<div id="div-gpt-ad-5"></div>';
+      scan(document.body, GENERIC);
+      expect(hits()).toHaveLength(0);
+    });
+  });
+
   it('Amazon: sp-sponsored-result marks the result that contains it', () => {
     document.body.innerHTML =
-      '<div data-component-type="s-search-result" id="res"><div data-component-type="sp-sponsored-result"></div></div>';
+      '<div data-component-type="s-search-result" id="res"><div data-component-type="sp-sponsored-result"></div><h2>Prodotto</h2></div>';
     scan(document.body, site('amazon'));
     const res = document.getElementById('res') as HTMLElement;
     expect(res.classList.contains('nsp-hit')).toBe(true);
@@ -96,7 +140,7 @@ describe('scan', () => {
 
   it('an ancestor marked after its children absorbs their marks', () => {
     // [data-google-query-id] comes before [id^="div-gpt-ad"] in AD_SELECTORS: the child is marked first.
-    document.body.innerHTML = '<div id="div-gpt-ad-2"><div data-google-query-id="q" id="child"></div></div>';
+    document.body.innerHTML = '<div id="div-gpt-ad-2"><div data-google-query-id="q" id="child"><iframe></iframe></div></div>';
     scan(document.body, GENERIC);
     expect(hits().map((el) => el.id)).toEqual(['div-gpt-ad-2']);
     const child = document.getElementById('child') as HTMLElement;

@@ -1,14 +1,8 @@
 {
-  "since": "1.0.2",
+  "since": "1.0.3",
   "hits": [
     {
       "path": "html:nth-of-type(1) > body:nth-of-type(1) > div:nth-of-type(1)",
-      "reason": "generic · [data-google-query-id]",
-      "inset": true,
-      "rel": true
-    },
-    {
-      "path": "html:nth-of-type(1) > body:nth-of-type(1) > div:nth-of-type(2)",
       "reason": "generic · [data-google-query-id]",
       "inset": true,
       "rel": true
@@ -32,18 +26,6 @@
       "rel": false
     },
     {
-      "path": "html:nth-of-type(1) > body:nth-of-type(1) > main:nth-of-type(1) > div:nth-of-type(1) > article:nth-of-type(1) > div:nth-of-type(1) > aside:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(6)",
-      "reason": "generic · [data-google-query-id]",
-      "inset": true,
-      "rel": true
-    },
-    {
-      "path": "html:nth-of-type(1) > body:nth-of-type(1) > main:nth-of-type(1) > div:nth-of-type(1) > article:nth-of-type(1) > div:nth-of-type(1) > aside:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(13)",
-      "reason": "generic · [data-google-query-id]",
-      "inset": true,
-      "rel": true
-    },
-    {
       "path": "html:nth-of-type(1) > body:nth-of-type(1) > main:nth-of-type(1) > div:nth-of-type(1) > article:nth-of-type(1) > div:nth-of-type(1) > aside:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(16)",
       "reason": "generic · [data-google-query-id]",
       "inset": true,
@@ -56,6 +38,6 @@
       "rel": true
     }
   ],
-  "badge": "9",
+  "badge": "6",
   "mode": "highlight"
 }

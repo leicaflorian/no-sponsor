@@ -14,6 +14,15 @@ export function queryAll(root: Element, sel: string): Element[] {
   return out;
 }
 
+// Media that fill an ad slot without any text.
+const MEDIA = 'img, picture, svg, video, canvas, iframe, object, embed';
+
+// An ad slot left empty (Google keeps #tads/#bottomads in the page even with no ads):
+// marking it would only show an empty banner.
+export function hasContent(el: Element): boolean {
+  return !!(el.textContent ?? '').trim() || !!el.querySelector(MEDIA);
+}
+
 export function scopesFor(root: Element, cfg: Detector): Element[] {
   const scopes = cfg.scope ? [...document.querySelectorAll(cfg.scope)] : [];
   if (!scopes.length) return [root];
@@ -31,8 +40,13 @@ export function scan(root: Element | null, cfg: Detector | null): void {
   // 1. known selectors
   for (const entry of [...cfg.selectors, ...AD_SELECTORS]) {
     const [sel, up] = Array.isArray(entry) ? entry : [entry];
-    for (const el of queryAll(root, sel)) {
-      mark(up ? el.closest(up) || el : el, `${cfg.id} · ${sel}`);
+    const found = queryAll(root, sel);
+    // content added to a slot that was empty at the last scan
+    const slot = root.parentElement?.closest(sel);
+    if (slot) found.push(slot);
+    for (const el of found) {
+      const target = up ? el.closest(up) || el : el;
+      if (hasContent(target)) mark(target, `${cfg.id} · ${sel}`);
     }
   }
 
