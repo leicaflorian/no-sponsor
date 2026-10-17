@@ -1,4 +1,5 @@
 {
+  "since": "1.0.2",
   "hits": [
     {
       "path": "html:nth-of-type(1) > body:nth-of-type(1) > div:nth-of-type(1)",
@@ -15,7 +16,7 @@
     {
       "path": "html:nth-of-type(1) > body:nth-of-type(1) > main:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(2)",
       "reason": "generic · [data-google-query-id]",
-      "inset": false,
+      "inset": true,
       "rel": true
     },
     {
@@ -27,7 +28,7 @@
     {
       "path": "html:nth-of-type(1) > body:nth-of-type(1) > main:nth-of-type(1) > div:nth-of-type(1) > article:nth-of-type(1) > div:nth-of-type(1) > aside:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(1)",
       "reason": "generic · [data-google-query-id]",
-      "inset": false,
+      "inset": true,
       "rel": false
     },
     {
@@ -45,13 +46,13 @@
     {
       "path": "html:nth-of-type(1) > body:nth-of-type(1) > main:nth-of-type(1) > div:nth-of-type(1) > article:nth-of-type(1) > div:nth-of-type(1) > aside:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(16)",
       "reason": "generic · [data-google-query-id]",
-      "inset": false,
+      "inset": true,
       "rel": true
     },
     {
       "path": "html:nth-of-type(1) > body:nth-of-type(1) > footer:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(2) > nav:nth-of-type(1) > ul:nth-of-type(1) > li:nth-of-type(7)",
       "reason": "generic · etichetta \"pubblicità\"",
-      "inset": false,
+      "inset": true,
       "rel": true
     }
   ],
