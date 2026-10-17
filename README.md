@@ -1,5 +1,7 @@
 # NoSponsor
 
+![NoSponsor: find sponsored content and highlight, collapse or hide it](.github/assets/og-image.png)
+
 Chrome extension (Manifest V3) that finds sponsored content and **highlights** it, **collapses** it into a clickable bar, or **hides** it.
 
 Dedicated detectors: **Google, Amazon, Subito.it, eBay**. On other sites there is a generic detection (can be turned off) based on the labels "Sponsorizzato", "Sponsored", "Pubblicità"... and on standard ad slots (Google Publisher Tag, AdSense).
@@ -96,3 +98,11 @@ In DevTools on a page:
 ## License
 
 GPL-3.0-or-later (see `LICENSE`).
+
+---
+
+<p align="center">
+  Made by&nbsp;
+  <a href="https://leicaflorianrobert.dev"><img src=".github/assets/lfr-badge.png" alt="lfr_" width="20" height="20" align="center" /></a>
+  &nbsp;<a href="https://leicaflorianrobert.dev">Leica Florian Robert</a>
+</p>
