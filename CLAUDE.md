@@ -14,7 +14,7 @@ Project documentation is written as `.md` files in:
 
 `/Users/florianleica/Library/CloudStorage/GoogleDrive-florian.leica@gmail.com/Il mio Drive/MyVault/Projects/No Sponsor (Extension)`
 
-Do not create documentation in the repo (apart from this file, `README.md` and `CHANGELOG.md`). Every version bump adds its entry to `CHANGELOG.md`, in English, written for users.
+Do not create documentation in the repo (apart from this file, `README.md` and `CHANGELOG.md`). Versions and `CHANGELOG.md` are updated only by `npm run release`; feature commits on `dev` do not bump the version. The changelog is in English, written for users.
 
 ## Superpowers in this project
 

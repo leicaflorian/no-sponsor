@@ -21,7 +21,8 @@
     "snapshot": "tsx scripts/snapshot.ts",
     "record-expected": "tsx scripts/record-expected.ts",
     "icons": "tsx scripts/icons.ts",
-    "store-assets": "wxt build && tsx scripts/store-assets.ts"
+    "store-assets": "wxt build && tsx scripts/store-assets.ts",
+    "release": "tsx scripts/release/index.ts"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",

@@ -1,0 +1,8 @@
+{
+  "checks": ["npm run lint", "npm run typecheck", "npm test", "npm run test:e2e"],
+  "zip": { "command": "npm run zip", "output": ".output/{name}-{version}-chrome.zip" },
+  "docs": ["README.md", "public/_locales/*/messages.json", "wxt.config.ts"],
+  "nodeVersionFile": ".nvmrc",
+  "storeUploadUrl": "https://chrome.google.com/webstore/devconsole",
+  "versionPolicy": "The project is developed in phases. Closing a phase bumps the minor version (phase 1 → 1.1.0, phase 7 → 1.7.0); everything else bumps the patch. A commit that closes a phase says so in its message. Never bump the major."
+}

@@ -51,6 +51,19 @@ Then in `chrome://extensions` turn on **Developer mode**, click **Load unpacked*
 | `npm run snapshot` | Saves a real page as a fixture |
 | `npm run record-expected` | Records the expected results of a fixture from 0.1.0 (needs the local tag `v0.1.0`); with `--build`, from the current build |
 | `npm run store-assets` | Build, then the Chrome Web Store screenshots and promo tiles in `.output/store-assets/` (macOS) |
+| `npm run release` | Releases a new version from `dev` (`-- --dry-run` rehearses it without writing or publishing) |
+
+## Releasing
+
+Prerequisites: `gh auth login`, Claude Code (`claude` on PATH), and a `release.local.json` copied from `release.local.example.json` (it holds the path of the store texts and is not committed).
+
+Run `npm run release` from `dev`, in sync with `origin`. The script:
+
+1. Merges `dev` into `main` (after asking), then runs lint, typecheck, unit and e2e tests.
+2. Asks Claude for the next version and the `CHANGELOG.md` entry; you can accept, edit or reject them, and it flags docs and store texts that look outdated.
+3. Commits the bump, builds the zip, tags `vX.Y.Z`, and pushes `main` and the tag.
+4. Creates the GitHub release with the zip, then brings `main` back into `dev`.
+5. On an error before the push it undoes everything; the upload to the Chrome Web Store stays manual (the script prints the link).
 
 ## Structure of `src/`
 

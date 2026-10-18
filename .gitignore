@@ -4,6 +4,9 @@
 node_modules/
 .claude/settings.local.json
 
+# Private release settings (store texts path)
+release.local.json
+
 # WXT, Playwright
 .output/
 .wxt/
