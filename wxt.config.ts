@@ -5,7 +5,10 @@ import { defineConfig } from 'wxt';
 export default defineConfig({
   srcDir: 'src',
   manifest: {
-    name: 'NoSponsor',
+    // Store-facing name with search keywords; short_name stays the brand for
+    // places with little room.
+    name: '__MSG_extName__',
+    short_name: 'NoSponsor',
     // Texts in public/_locales; English for every language other than Italian.
     default_locale: 'en',
     description: '__MSG_extDescription__',

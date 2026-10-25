@@ -3,8 +3,12 @@
     "message": "en",
     "description": "Language code of this file, used for <html lang> in the popup. Not a text to translate: it is the code of the locale folder."
   },
+  "extName": {
+    "message": "NoSponsor – Hide Sponsored Results & Ads",
+    "description": "Extension name in the browser and in the store listing (max 75 characters). Keep \"NoSponsor\" first; the rest helps people find it in the store search."
+  },
   "extDescription": {
-    "message": "Highlights, collapses or hides sponsored content on Google, Amazon, eBay, Subito and other sites. YouTube ads at 16x.",
+    "message": "Hide, collapse or highlight sponsored results and ads on Google, Amazon, eBay, Subito and more. Speeds through YouTube ads.",
     "description": "Extension description in the browser and in the store listing (max 132 characters)."
   },
   "popupCountMany": {

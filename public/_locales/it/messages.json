@@ -2,8 +2,11 @@
   "locale": {
     "message": "it"
   },
+  "extName": {
+    "message": "NoSponsor – Nascondi sponsorizzati e annunci"
+  },
   "extDescription": {
-    "message": "Evidenzia, comprime o nasconde gli sponsorizzati su Google, Amazon, Subito, eBay e altri siti. Annunci YouTube a 16x."
+    "message": "Nasconde, comprime o evidenzia sponsorizzati e annunci su Google, Amazon, Subito, eBay e altri siti. Velocizza gli annunci YouTube."
   },
   "popupCountMany": {
     "message": "contenuti sponsorizzati"
