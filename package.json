@@ -14,7 +14,7 @@
     "zip": "wxt zip",
     "lint": "eslint .",
     "format": "prettier --write .",
-    "typecheck": "tsc --noEmit",
+    "typecheck": "wxt prepare && tsc --noEmit",
     "test": "vitest run",
     "test:e2e": "wxt build && playwright test",
     "test:e2e:legacy": "NSP_EXT=legacy playwright test",
