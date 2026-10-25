@@ -2,6 +2,13 @@
 
 All notable changes to NoSponsor. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and the version is the one in `package.json` and the manifest.
 
+## [1.0.12] - 2026-10-25
+
+### Changed
+
+- New name and description in the Chrome Web Store and in the browser, in English and Italian: "NoSponsor – Hide Sponsored Results & Ads" (Italian: "NoSponsor – Nascondi sponsorizzati e annunci"), so the extension is easier to find when searching. The short name shown where space is tight stays "NoSponsor".
+- The summary now leads with what the extension does (hide, collapse or highlight sponsored results and ads) and the sites it covers, and no longer mentions the 16x speed of YouTube ads.
+
 ## [1.0.11] - 2026-10-17
 
 ### Added
