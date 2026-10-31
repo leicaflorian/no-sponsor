@@ -4,8 +4,10 @@ import type { Detector } from '../rules/types';
 export const MAX_CONTAINER_TEXT = 15000; // beyond this, the "container" is almost certainly the whole page
 // The YouTube player has a class with "card" in it and holds the ad's "Sponsorizzato" label:
 // marking it would hide the video and the Skip button.
+// The Prime Video player (`dv-web-player-*`, `.atvwebplayersdk-player-container`) shows the ad's
+// "Pubblicità" label while the ad plays: same reason, it must never be the container.
 export const FORBIDDEN =
-  'html, body, main, [role="main"], #search, #rso, #rcnt, #center_col, #a-page, #movie_player, .html5-video-player';
+  'html, body, main, [role="main"], #search, #rso, #rcnt, #center_col, #a-page, #movie_player, .html5-video-player, [id^="dv-web-player"], .atvwebplayersdk-player-container';
 
 export function findContainer(el: Element, cfg: Detector): Element | null {
   for (const sel of cfg.container) {

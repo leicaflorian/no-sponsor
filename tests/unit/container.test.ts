@@ -32,4 +32,11 @@ describe('findContainer', () => {
     const yt: Detector = { ...cfg, container: ['[class*="card" i]'] };
     expect(findContainer(document.getElementById('el') as Element, yt)).toBeNull();
   });
+
+  it('never picks the Prime Video player as container', () => {
+    document.body.innerHTML =
+      '<div id="dv-web-player-2"><div class="atvwebplayersdk-player-container"><div><span id="el">Pubblicità</span></div></div></div>';
+    const pv: Detector = { ...cfg, container: ['.atvwebplayersdk-player-container', '[id^="dv-web-player"]'] };
+    expect(findContainer(document.getElementById('el') as Element, pv)).toBeNull();
+  });
 });

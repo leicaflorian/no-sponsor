@@ -10,7 +10,9 @@ import { browser } from 'wxt/browser';
 import { count, unmarkAll, updateInset } from '../../engine/marker';
 import { scan } from '../../engine/scan';
 import { findSite, GENERIC } from '../../rules/detectors';
-import { startYouTube } from '../../sites/youtube';
+import { startVeil } from '../../sites/ad-veil';
+import { PRIME_VIDEO } from '../../sites/primevideo';
+import { YOUTUBE } from '../../sites/youtube';
 import type { Detector } from '../../rules/types';
 import type { CountMessage, PageInfo } from '../../shared/messages';
 import { applyPageTexts, watchPageTexts } from '../../shared/page-texts';
@@ -36,7 +38,7 @@ export default defineContentScript({
 
     const HOST = location.hostname.replace(/^www\./, '');
     const SITE = findSite(location.hostname);
-    const YOUTUBE = /(^|\.)youtube\.com$/.test(location.hostname);
+    const VEIL_SITE = [YOUTUBE, PRIME_VIDEO].find((s) => s.matches(location)) ?? null;
 
     let settings: Settings = { ...DEFAULTS };
 
@@ -71,23 +73,23 @@ export default defineContentScript({
       return !settings.disabledHosts.includes(HOST) && !!config();
     }
 
-    // The YouTube ad veil follows the site switch only, not the generic detection.
-    const youtubeOn = () => !settings.disabledHosts.includes(HOST);
-    let youtube: ReturnType<typeof startYouTube> | null = null; // started once the settings are loaded
+    // The video ad veil follows the site switch only, not the generic detection.
+    const veilOn = () => !settings.disabledHosts.includes(HOST);
+    let veil: ReturnType<typeof startVeil> | null = null; // started once the settings are loaded
 
     function applyMode(): void {
       document.documentElement.dataset['nspMode'] = enabledHere() ? settings.mode : 'off';
       applyPageTexts(document.documentElement);
-      if (!youtube) return;
-      document.documentElement.dataset['nspYt'] = youtubeOn() ? 'on' : 'off';
-      youtube.refresh();
+      if (!veil || !VEIL_SITE) return;
+      document.documentElement.dataset[VEIL_SITE.flag] = veilOn() ? 'on' : 'off';
+      veil.refresh();
     }
 
     watchPageTexts(document.documentElement);
 
     browser.storage.sync.get({ ...DEFAULTS }, (stored) => {
       settings = { ...DEFAULTS, ...(stored as Partial<Settings>) };
-      if (YOUTUBE) youtube = startYouTube(youtubeOn);
+      if (VEIL_SITE) veil = startVeil(VEIL_SITE, veilOn);
       applyMode();
       fullScan();
     });
