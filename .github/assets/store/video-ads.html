@@ -1,0 +1,145 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8" />
+<!-- Chrome Web Store screenshot (1280 × 800), first in the carousel: video ads veiled on YouTube,
+     Prime Video and Netflix. A drawing, not a capture: three stylized players with the veil as
+     src/entrypoints/content/style.css draws it (black picture, amber "Ad · 0:12 left" tag).
+     Services are named in plain text, no logos. Rendered by scripts/store-assets.ts. -->
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { width: 1280px; height: 800px; }
+  body {
+    background:
+      radial-gradient(900px 420px at 85% 0%, rgba(245, 158, 11, 0.16), transparent 70%),
+      radial-gradient(700px 360px at 10% 100%, rgba(245, 158, 11, 0.08), transparent 70%),
+      #1c1917;
+    color: #fafaf9;
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    overflow: hidden;
+  }
+  header { display: flex; align-items: center; gap: 22px; padding: 34px 60px 0; height: 150px; }
+  header svg { flex: none; }
+  h1 { font-size: 40px; font-weight: 800; letter-spacing: -0.02em; line-height: 1.1; }
+  h1 b { color: #f59e0b; }
+  header p { margin-top: 8px; font-size: 21px; color: #d6d3d1; }
+  header .new {
+    display: inline-block; vertical-align: 8px; margin-left: 14px;
+    font-size: 14px; font-weight: 700; letter-spacing: 0.08em;
+    color: #1c1917; background: #f59e0b; padding: 4px 9px; border-radius: 5px;
+  }
+
+  /* The area under the header, with the players and the features centered in it. */
+  .stage { height: 650px; display: flex; flex-direction: column; justify-content: center; padding-bottom: 30px; }
+  .players { display: flex; gap: 28px; padding: 0 60px; }
+  .service { flex: 1 1 0; }
+  .name { font-size: 24px; font-weight: 700; margin-bottom: 14px; letter-spacing: -0.01em; }
+  .player {
+    position: relative; aspect-ratio: 16 / 9; border-radius: 12px; overflow: hidden;
+    background: #000; border: 1px solid #3a3330;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.45);
+  }
+  /* The tag of style.css, scaled up from 12px to read at store size. */
+  .tag {
+    position: absolute; top: 14px; left: 14px;
+    padding: 6px 11px; border-radius: 5px;
+    background: #f59e0b; color: #1c1917;
+    font-size: 17px; font-weight: 700; line-height: 1.2;
+  }
+  .controls {
+    position: absolute; left: 0; right: 0; bottom: 0; padding: 0 14px 12px;
+    background: linear-gradient(transparent, rgba(0, 0, 0, 0.6));
+  }
+  .progress { height: 5px; border-radius: 3px; background: #44403c; margin-bottom: 10px; overflow: hidden; }
+  .progress i { display: block; height: 100%; background: #f59e0b; }
+  .row { display: flex; align-items: center; gap: 14px; color: #d6d3d1; }
+  .row svg { width: 22px; height: 22px; }
+  .speed {
+    margin-left: auto; font-size: 15px; font-weight: 800; color: #f59e0b;
+    border: 2px solid #f59e0b; border-radius: 5px; padding: 1px 7px;
+  }
+
+  .features { display: flex; justify-content: center; gap: 18px; margin-top: 64px; }
+  .feature {
+    display: flex; align-items: center; gap: 12px;
+    font-size: 20px; font-weight: 600; color: #e7e5e4;
+    background: #292524; border: 1px solid #3a3330; border-radius: 999px;
+    padding: 12px 22px 12px 16px;
+  }
+  .feature svg { width: 26px; height: 26px; flex: none; }
+</style>
+</head>
+<body>
+  <header>
+    <svg width="72" height="72" viewBox="0 0 128 128" aria-hidden="true">
+      <rect width="128" height="128" rx="24" fill="#0c0a09" />
+      <rect x="30" y="42" width="68" height="44" rx="7" fill="#78716c" />
+      <circle cx="64" cy="64" r="52" fill="none" stroke="#f59e0b" stroke-width="18" />
+      <line x1="27" y1="27" x2="101" y2="101" stroke="#f59e0b" stroke-width="18" />
+    </svg>
+    <div>
+      <h1>Video ads, <b>veiled</b><span class="new">NEW</span></h1>
+      <p>On YouTube, Prime Video and Netflix: black picture, no sound, played at 16x.</p>
+    </div>
+  </header>
+
+  <!-- One player per service; only the name and the time left change. -->
+  <template id="player">
+    <div class="service">
+      <div class="name"></div>
+      <div class="player">
+        <span class="tag"></span>
+        <div class="controls">
+          <div class="progress"><i></i></div>
+          <div class="row">
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4.5v15l12-7.5z" /></svg>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M4 9h4l5-4v14l-5-4H4z" fill="currentColor" /><path d="M16 9l5 6M21 9l-5 6" />
+            </svg>
+            <span class="speed">16x</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </template>
+  <div class="stage">
+  <div class="players"></div>
+
+  <div class="features">
+    <span class="feature">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+        <rect x="3" y="5" width="18" height="14" rx="2" fill="#0c0a09" /><path d="M3 5l18 14" />
+      </svg>
+      Picture hidden
+    </span>
+    <span class="feature">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M4 9h4l5-4v14l-5-4H4z" /><path d="M16 9l5 6M21 9l-5 6" />
+      </svg>
+      Sound muted
+    </span>
+    <span class="feature">
+      <svg viewBox="0 0 24 24" fill="#f59e0b" aria-hidden="true"><path d="M3 5v14l9-7zM12 5v14l9-7z" /></svg>
+      Over in seconds
+    </span>
+  </div>
+  </div>
+
+  <script>
+    const services = [
+      { name: 'YouTube', left: '0:12', done: 35 },
+      { name: 'Prime Video', left: '0:24', done: 20 },
+      { name: 'Netflix', left: '0:07', done: 60 },
+    ];
+    const tpl = document.getElementById('player');
+    const players = document.querySelector('.players');
+    for (const s of services) {
+      const node = tpl.content.cloneNode(true);
+      node.querySelector('.name').textContent = s.name;
+      node.querySelector('.tag').textContent = `Ad · ${s.left} left`;
+      node.querySelector('.progress i').style.width = `${s.done}%`;
+      players.append(node);
+    }
+  </script>
+</body>
+</html>

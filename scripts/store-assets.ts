@@ -1,5 +1,6 @@
-// Renders the Chrome Web Store images into .output/store-assets/: five screenshots (1280 × 800) of the
-// extension at work on the saved pages, and the two promotional tiles (440 × 280, 1400 × 560).
+// Renders the Chrome Web Store images into .output/store-assets/: the five screenshots (1280 × 800, the
+// store's maximum), that is a drawn one on video ads, first in the carousel, and four of the extension
+// at work on the saved pages; then the two promotional tiles (440 × 280, 1400 × 560).
 // Usage: npm run store-assets   (builds the extension first)
 // The screenshots are in English: the browser runs in English, so the extension's texts are too.
 // Unlike the e2e tests, the saved pages may load their images and fonts from the network: a fresh
@@ -33,12 +34,11 @@ type Shot = {
   popup?: boolean;
   scrollTo?: string; // the element to bring near the top; the first sponsored item by default
   remove?: string[]; // page elements in the way (cookie banners, overlapping texts)
-  prepare?: (page: Page) => Promise<void>;
 };
 
 const SHOTS: Shot[] = [
   {
-    file: '1-highlight-subito.png',
+    file: '2-highlight-subito.png',
     title: 'Spot <b>sponsored</b> listings at a glance',
     text: 'Highlight: an amber border and a SPONSOR badge on every paid result.',
     site: 'subito',
@@ -48,7 +48,7 @@ const SHOTS: Shot[] = [
     remove: ['[class*="snackbar-wrapper"]'],
   },
   {
-    file: '2-collapse-amazon.png',
+    file: '3-collapse-amazon.png',
     title: '<b>Collapse</b> sponsored products',
     text: 'Each one becomes a thin bar that opens again with a click.',
     site: 'amazon',
@@ -58,7 +58,7 @@ const SHOTS: Shot[] = [
     scrollTo: 'body',
   },
   {
-    file: '3-hide-popup-amazon.png',
+    file: '4-hide-popup-amazon.png',
     title: 'Highlight, collapse or <b>hide</b>: you choose',
     text: 'The count, the mode, a switch for each site and a link to report a problem.',
     site: 'amazon',
@@ -67,23 +67,6 @@ const SHOTS: Shot[] = [
     mode: 'hide',
     popup: true,
     scrollTo: 'body',
-  },
-  {
-    file: '4-youtube-ads.png',
-    title: 'YouTube video ads at <b>16x</b>',
-    text: 'Picture veiled, sound muted and the time left on screen, until the video is back.',
-    site: 'youtube',
-    page: 'annuncio',
-    host: 'youtube.com',
-    mode: 'highlight',
-    remove: ['.ytp-time-display'],
-    prepare: async (page) => {
-      await page.waitForFunction(() => (document.querySelector('video') as HTMLVideoElement).readyState >= 1);
-      await page.evaluate(() => document.querySelector('#movie_player')?.classList.add('ad-showing'));
-      await page.waitForFunction(
-        () => (document.querySelector('#movie_player') as HTMLElement).dataset['nspRemaining'],
-      );
-    },
   },
   {
     file: '5-highlight-ebay.png',
@@ -98,7 +81,9 @@ const SHOTS: Shot[] = [
   },
 ];
 
+// Images drawn in HTML, rendered as they are.
 const TILES = [
+  { file: '1-video-ads.png', source: 'video-ads.html', width: 1280, height: 800 },
   { file: 'small-tile-440x280.png', source: 'small-tile.html', width: 440, height: 280 },
   { file: 'marquee-1400x560.png', source: 'marquee.html', width: 1400, height: 560 },
 ];
@@ -177,6 +162,9 @@ async function render(context: BrowserContext, html: string, width: number, heig
   await page.setViewportSize({ width, height });
   await page.setContent(html);
   await page.evaluate(() => Promise.all([...document.images].map((img) => img.decode())));
+  // Let the page paint at its new size first: otherwise a flat page can come out with part of a
+  // stale frame (the context's 1280 × 900 viewport) repeated at the bottom.
+  await page.evaluate(() => new Promise((done) => requestAnimationFrame(() => requestAnimationFrame(done))));
   const path = join(OUT, file);
   writeFileSync(path, await page.screenshot({ clip: { x: 0, y: 0, width, height } }));
   await page.close();
@@ -197,7 +185,6 @@ try {
   for (const shot of SHOTS) {
     await setSettings(sw, { mode: shot.mode, generic: true, disabledHosts: [] });
     const page = await openShot(context, shot.site, shot.page);
-    await shot.prepare?.(page);
     await frameShot(page, shot.scrollTo ?? '.nsp-hit, .nsp-collapsed', shot.remove ?? []);
     const pagePng = await page.screenshot();
     const popup = shot.popup ? `<img src="${dataUrl(await popupImage(context, sw, page))}" alt="" />` : '';
