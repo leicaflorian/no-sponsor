@@ -6,7 +6,9 @@ Chrome extension (Manifest V3) that finds sponsored content and **highlights** i
 
 Dedicated detectors: **Google, Amazon, Subito.it, eBay**. On other sites there is a generic detection (can be turned off) based on the labels "Sponsorizzato", "Sponsored", "Pubblicità"... and on standard ad slots (Google Publisher Tag, AdSense).
 
-On **YouTube**, video ads play at **16x**, so a 30-second ad is over in about 2 seconds. Meanwhile the picture is blacked out, the sound is muted and a label on the player shows the real time left. When the ad ends, the video goes on at the speed and with the sound it had before.
+On **YouTube**, **Prime Video** (`primevideo.com` and `amazon.*/gp/video`) and **Netflix** (`netflix.com`), video ads play at **16x**, so a 30-second ad is over in about 2 seconds. Meanwhile the picture is blacked out, the sound is muted and a label on the player shows the real time left. When the ad ends, the video goes on at the speed and with the sound it had before.
+
+Every video ad break that the veil covers counts as one sponsored item in the icon badge and in the popup (shown as a "including N video ads" line); a break resumed within a moment, or a video swap, is not counted again, and the count lasts until the page is reloaded.
 
 The UI is in Italian or English, following the browser's language (English for every other language). The project documentation lives in the owner's vault, outside the repo.
 
@@ -103,7 +105,7 @@ The repository is public, so a saved page must not contain personal data. The sc
 - Three strategies per site: **known selectors**, **text labels** (going up to the card's container) and, on sites that obfuscate, the **actually visible text** rebuilt in on-screen order (letters hidden via CSS or reordered with `order`) plus `aria-labelledby`.
 - A debounced `MutationObserver` covers infinite scroll and content loaded later.
 - Every marked element has `data-nsp-reason` with the rule that found it: useful in DevTools to understand false positives.
-- UI texts live in `public/_locales/{en,it}/messages.json` and are read through `t()` in `src/shared/i18n.ts`. The texts the CSS shows on pages (collapsed bar, YouTube ad veil) are passed as custom properties on `<html>`, with English as the fallback in the stylesheet. The e2e tests run in Italian unless a test asks for another language (`launch('en')`).
+- UI texts live in `public/_locales/{en,it}/messages.json` and are read through `t()` in `src/shared/i18n.ts`. The texts the CSS shows on pages (collapsed bar, video ad veil) are passed as custom properties on `<html>`, with English as the fallback in the stylesheet. The e2e tests run in Italian unless a test asks for another language (`launch('en')`).
 
 ## Quick debugging
 

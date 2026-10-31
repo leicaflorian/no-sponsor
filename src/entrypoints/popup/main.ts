@@ -2,13 +2,14 @@ import { browser } from 'wxt/browser';
 import type { GetMessage, PageInfo } from '../../shared/messages';
 import { t, uiLang, type MessageKey } from '../../shared/i18n';
 import { buildReportUrl } from '../../shared/report';
+import { videoLine } from '../../shared/video-line';
 import { DEFAULTS, type Mode, type Settings } from '../../shared/settings';
 
 const $ = (id: string) => document.getElementById(id) as HTMLElement;
 const $input = (id: string) => document.getElementById(id) as HTMLInputElement;
 
 let settings: Settings = { ...DEFAULTS };
-let page: PageInfo | null = null; // { n, host, site } from the content script
+let page: PageInfo | null = null; // { n, video, host, site } from the content script
 
 function render(): void {
   document.querySelectorAll<HTMLButtonElement>('.segmented button').forEach((b) => {
@@ -20,6 +21,7 @@ function render(): void {
     $('count').textContent = '–';
     $('countLabel').textContent = t('popupNoScan');
     $('detector').textContent = t('popupNoScanHint');
+    $('countVideo').hidden = true;
     $('host').textContent = t('popupThisSite');
     $input('siteEnabled').disabled = true;
     return;
@@ -28,6 +30,9 @@ function render(): void {
   const off = settings.disabledHosts.includes(page.host);
   $('count').textContent = String(page.n);
   $('countLabel').textContent = t(page.n === 1 ? 'popupCountOne' : 'popupCountMany');
+  const video = videoLine(page, t);
+  $('countVideo').hidden = video === null;
+  $('countVideo').textContent = video ?? '';
   $('detector').textContent = page.site
     ? t('popupDetector', page.site)
     : settings.generic

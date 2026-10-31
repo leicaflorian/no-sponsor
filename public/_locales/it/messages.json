@@ -88,5 +88,23 @@
   },
   "reportPrompt": {
     "message": "Cosa non va?"
+  },
+  "popupVideoOne": {
+    "message": "di cui $COUNT$ annuncio video",
+    "placeholders": {
+      "count": {
+        "content": "$1",
+        "example": "1"
+      }
+    }
+  },
+  "popupVideoMany": {
+    "message": "di cui $COUNT$ annunci video",
+    "placeholders": {
+      "count": {
+        "content": "$1",
+        "example": "3"
+      }
+    }
   }
 }

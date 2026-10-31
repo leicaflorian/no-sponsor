@@ -87,11 +87,11 @@
   },
   "pageAdBefore": {
     "message": "Ad ·",
-    "description": "On YouTube, over a video ad: text before the remaining time (e.g. \"Ad ·\" in \"Ad · 0:12 left\")."
+    "description": "On YouTube, Prime Video and Netflix, over a video ad: text before the remaining time (e.g. \"Ad ·\" in \"Ad · 0:12 left\")."
   },
   "pageAdAfter": {
     "message": "left",
-    "description": "On YouTube, over a video ad: text after the remaining time (e.g. \"left\" in \"Ad · 0:12 left\"); may be empty."
+    "description": "On YouTube, Prime Video and Netflix, over a video ad: text after the remaining time (e.g. \"left\" in \"Ad · 0:12 left\"); may be empty."
   },
   "popupReport": {
     "message": "Report a problem",
@@ -114,5 +114,25 @@
   "reportPrompt": {
     "message": "What's wrong?",
     "description": "First line of the GitHub issue opened by \"Report a problem\": the user writes the answer below it."
+  },
+  "popupVideoOne": {
+    "message": "including $COUNT$ video ad",
+    "description": "Popup, under the counter: how many of the counted items are veiled video ads (one), e.g. \"including 1 video ad\".",
+    "placeholders": {
+      "count": {
+        "content": "$1",
+        "example": "1"
+      }
+    }
+  },
+  "popupVideoMany": {
+    "message": "including $COUNT$ video ads",
+    "description": "Popup, under the counter: how many of the counted items are veiled video ads (several), e.g. \"including 3 video ads\".",
+    "placeholders": {
+      "count": {
+        "content": "$1",
+        "example": "3"
+      }
+    }
   }
 }

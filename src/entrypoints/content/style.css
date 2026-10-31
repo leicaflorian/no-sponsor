@@ -111,10 +111,23 @@ html[data-nsp-mode='hide'] .nsp-hit {
   display: none !important;
 }
 
-/* ---------- YouTube: ads in the player ---------- */
+/* ---------- Video ads in the player (YouTube, Prime Video, Netflix) ---------- */
 
 /* Black video, no advertiser card; Skip, its countdown, "Sponsorizzato" and the controls stay visible. */
 html[data-nsp-yt='on'] .html5-video-player.ad-showing video {
+  opacity: 0 !important;
+}
+
+/* Prime Video: the ad is on while the player shows its countdown timer. */
+html[data-nsp-pv='on']
+  [id^='dv-web-player']:has(.atvwebplayersdk-ad-timer-remaining-time)
+  .atvwebplayersdk-video-surface
+  video {
+  opacity: 0 !important;
+}
+
+/* Netflix: the ad is on while the player has its ad info block. */
+html[data-nsp-nf='on'] [data-uia='player']:has([data-uia='ads-info-container']) [data-uia='video-canvas'] video {
   opacity: 0 !important;
 }
 
@@ -123,8 +136,10 @@ html[data-nsp-yt='on'] .html5-video-player.ad-showing .ytp-visit-advertiser-link
   display: none !important;
 }
 
-/* Remaining time, written by src/sites/youtube.ts: no node is added to the player. */
-html[data-nsp-yt='on'] .html5-video-player.ad-showing[data-nsp-remaining]::after {
+/* Remaining time, written by src/sites/ad-veil.ts: no node is added to the player. */
+html[data-nsp-yt='on'] .html5-video-player.ad-showing[data-nsp-remaining]::after,
+html[data-nsp-pv='on'] [id^='dv-web-player'][data-nsp-remaining]::after,
+html[data-nsp-nf='on'] [data-uia='player'][data-nsp-remaining]::after {
   content: var(--nsp-t-ad-before, 'Ad ·') ' ' attr(data-nsp-remaining) ' ' var(--nsp-t-ad-after, 'left') !important;
   position: absolute !important;
   top: 12px !important;

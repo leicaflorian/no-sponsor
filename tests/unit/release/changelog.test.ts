@@ -8,9 +8,12 @@ const section = '## [1.0.12] - 2026-10-18\n\n### Fixed\n\n- Something.';
 
 describe('insertSection', () => {
   it('puts the section right before the latest version, with a blank line around it', () => {
-    const out = insertSection(real, section);
-    expect(out).toContain(`\n\n${section}\n\n## [1.0.11] - 2026-10-17`);
-    expect(out.indexOf('## [1.0.12]')).toBeLessThan(out.indexOf('## [1.0.11]'));
+    // A fixed changelog, not the real one: its latest version changes at every release.
+    const input =
+      '# Changelog\n\nAll notable changes.\n\n## [1.0.11] - 2026-10-17\n\n- Last.\n\n## [1.0.10] - 2026-10-16\n\n- Older.\n';
+    expect(insertSection(input, section)).toBe(
+      `# Changelog\n\nAll notable changes.\n\n${section}\n\n## [1.0.11] - 2026-10-17\n\n- Last.\n\n## [1.0.10] - 2026-10-16\n\n- Older.\n`,
+    );
   });
 
   it('puts it after the Unreleased content', () => {
