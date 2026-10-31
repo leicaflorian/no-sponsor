@@ -2,6 +2,14 @@
 
 All notable changes to NoSponsor. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and the version is the one in `package.json` and the manifest.
 
+## [1.0.13] - 2026-11-01
+
+### Added
+
+- Prime Video (`primevideo.com` and Amazon's `/gp/video` pages) and Netflix: video ads now get the same treatment as on YouTube. They play at 16x, muted and blacked out, with a label showing the real time left, and your previous speed and volume come back when the ad ends.
+- Video ads now count in the toolbar badge and in the popup. Each veiled ad break counts as one sponsored item, and the popup adds a line such as "including 3 video ads" (Italian: "di cui 3 annunci video"). An ad that resumes right away, or a video swap, is not counted twice. The count resets when the page is reloaded.
+- "Report a problem" now also includes the number of video ads veiled on the page.
+
 ## [1.0.12] - 2026-10-25
 
 ### Changed
