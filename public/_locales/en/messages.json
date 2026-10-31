@@ -8,7 +8,7 @@
     "description": "Extension name in the browser and in the store listing (max 75 characters). Keep \"NoSponsor\" first; the rest helps people find it in the store search."
   },
   "extDescription": {
-    "message": "Hide, collapse or highlight sponsored results and ads on Google, Amazon, eBay, Subito and more. Speeds through YouTube ads.",
+    "message": "Hide, collapse or highlight sponsored results on Google, Amazon, eBay, Subito. Speeds through YouTube, Prime Video and Netflix ads.",
     "description": "Extension description in the browser and in the store listing (max 132 characters)."
   },
   "popupCountMany": {
