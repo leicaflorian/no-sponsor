@@ -11,6 +11,7 @@ import { count, unmarkAll, updateInset } from '../../engine/marker';
 import { scan } from '../../engine/scan';
 import { findSite, GENERIC } from '../../rules/detectors';
 import { startVeil } from '../../sites/ad-veil';
+import { NETFLIX } from '../../sites/netflix';
 import { PRIME_VIDEO } from '../../sites/primevideo';
 import { YOUTUBE } from '../../sites/youtube';
 import type { Detector } from '../../rules/types';
@@ -38,7 +39,7 @@ export default defineContentScript({
 
     const HOST = location.hostname.replace(/^www\./, '');
     const SITE = findSite(location.hostname);
-    const VEIL_SITE = [YOUTUBE, PRIME_VIDEO].find((s) => s.matches(location)) ?? null;
+    const VEIL_SITE = [YOUTUBE, PRIME_VIDEO, NETFLIX].find((s) => s.matches(location)) ?? null;
 
     let settings: Settings = { ...DEFAULTS };
 

@@ -1,6 +1,7 @@
-// Ad veil shared by the sites: while an ad plays the video is muted and played at 16x, and the remaining time (at that
-// speed) is written on the player; the CSS (html[data-nsp-yt="on"] / html[data-nsp-pv="on"]) blacks out the video and
-// shows that time. Never seeks: currentTime is easier for a site to notice than the speed.
+// Ad veil shared by the sites: while an ad plays the video is muted and played at 16x, and the remaining time (at
+// that speed) is written on the player; the CSS (html[data-nsp-yt="on"] / html[data-nsp-pv="on"] /
+// html[data-nsp-nf="on"]) blacks out the video and shows that time. Never seeks: currentTime is easier for a site
+// to notice than the speed.
 
 export const RESTORE_DELAY_MS = 300; // two ads in a row can drop `ad-showing` for an instant
 export const TICK_MS = 500;
@@ -18,7 +19,7 @@ export function formatRemaining(seconds: number): string | null {
 
 export interface VeilSite {
   player: string; // CSS selector of a player
-  flag: 'nspYt' | 'nspPv'; // dataset key on <html> read by the CSS
+  flag: 'nspYt' | 'nspPv' | 'nspNf'; // dataset key on <html> read by the CSS
   matches(loc: { hostname: string; pathname: string }): boolean;
   inAd(player: HTMLElement): boolean;
   video(player: HTMLElement): HTMLVideoElement | null;
@@ -173,6 +174,16 @@ export function startVeil(
       // A node that appears or goes away inside a player (the ad is a node on some sites, not a class).
       const host = (m.target as Element).closest?.(site.player);
       if (host) players.add(host);
+      for (const n of m.removedNodes) {
+        if (n.nodeType !== 1) continue;
+        const el = n as Element;
+        for (const [p, v] of veils) {
+          if (!p.isConnected && (p === el || el.contains(p))) {
+            v.dispose();
+            veils.delete(p);
+          }
+        }
+      }
       for (const n of m.addedNodes) {
         if (n.nodeType !== 1) continue;
         const el = n as Element;

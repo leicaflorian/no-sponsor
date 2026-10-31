@@ -6,7 +6,7 @@ Chrome extension (Manifest V3) that finds sponsored content and **highlights** i
 
 Dedicated detectors: **Google, Amazon, Subito.it, eBay**. On other sites there is a generic detection (can be turned off) based on the labels "Sponsorizzato", "Sponsored", "Pubblicità"... and on standard ad slots (Google Publisher Tag, AdSense).
 
-On **YouTube** and **Prime Video** (`primevideo.com` and `amazon.*/gp/video`), video ads play at **16x**, so a 30-second ad is over in about 2 seconds. Meanwhile the picture is blacked out, the sound is muted and a label on the player shows the real time left. When the ad ends, the video goes on at the speed and with the sound it had before.
+On **YouTube**, **Prime Video** (`primevideo.com` and `amazon.*/gp/video`) and **Netflix** (`netflix.com`), video ads play at **16x**, so a 30-second ad is over in about 2 seconds. Meanwhile the picture is blacked out, the sound is muted and a label on the player shows the real time left. When the ad ends, the video goes on at the speed and with the sound it had before.
 
 Every video ad break that the veil covers counts as one sponsored item in the icon badge and in the popup (shown as a "including N video ads" line); a break resumed within a moment, or a video swap, is not counted again, and the count lasts until the page is reloaded.
 

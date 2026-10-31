@@ -39,4 +39,22 @@ describe('findContainer', () => {
     const pv: Detector = { ...cfg, container: ['.atvwebplayersdk-player-container', '[id^="dv-web-player"]'] };
     expect(findContainer(document.getElementById('el') as Element, pv)).toBeNull();
   });
+
+  it('never picks the Netflix player as container', () => {
+    document.body.innerHTML =
+      '<div class="watch-video"><div data-uia="player"><div><span id="el">Pubblicità</span></div></div></div>';
+    const nf: Detector = { ...cfg, container: ['[data-uia="player"]', '.watch-video'] };
+    expect(findContainer(document.getElementById('el') as Element, nf)).toBeNull();
+  });
+
+  it.each([
+    ['pause-ad inside .watch-video', '<div class="watch-video"><div data-uia="pause-ad">%</div></div>'],
+    ['the player', '<div data-uia="player">%</div>'],
+  ])('returns null for a label inside the Netflix watch page (%s)', (_name, wrap) => {
+    document.body.innerHTML = wrap.replace(
+      '%',
+      '<ul><li><div class="card"><span id="el">Pubblicità</span></div></li></ul>',
+    );
+    expect(findContainer(document.getElementById('el') as Element, cfg)).toBeNull();
+  });
 });
