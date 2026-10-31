@@ -34,14 +34,17 @@ export class Veil {
   private tick: ReturnType<typeof setInterval> | undefined;
   private restore: ReturnType<typeof setTimeout> | undefined;
   private lastInput = -Infinity;
+  private inBreak = false; // the current break is already counted; cleared only when the ad is really gone
 
   constructor(
     private readonly player: HTMLElement,
     private readonly site: VeilSite,
+    private readonly onAdStart?: () => void,
   ) {}
 
   sync(enabled: boolean): void {
     const inAd = enabled && this.site.inAd(this.player);
+    if (enabled && !inAd) this.inBreak = false;
     if (inAd && !this.video) this.start();
     else if (!inAd && this.video) this.stop(enabled ? RESTORE_DELAY_MS : 0);
     else if (!enabled && this.restore !== undefined) this.restoreNow();
@@ -52,7 +55,7 @@ export class Veil {
     else if (this.restore !== undefined) this.restoreNow();
   }
 
-  private start(): void {
+  private start(countBreak = true): void {
     const video = this.site.video(this.player);
     if (!video) return;
     this.video = video;
@@ -60,7 +63,10 @@ export class Veil {
       // Back-to-back ads: still the same break, audio and speed stay as they are.
       clearTimeout(this.restore);
       this.restore = undefined;
+      this.inBreak = true;
     } else {
+      if (countBreak && !this.inBreak) this.onAdStart?.(); // a fresh break (not the end of a pending restore)
+      this.inBreak = true;
       if (!video.muted) {
         video.muted = true;
         this.mutedByUs = true;
@@ -131,7 +137,7 @@ export class Veil {
     if (this.video && this.site.video(this.player) !== this.video) {
       // The site swapped the <video> during the break: give the old one its audio back, mute the new one.
       this.stop(0);
-      this.start();
+      this.start(false); // same break, not a new one
       return;
     }
     const v = this.video;
@@ -144,12 +150,16 @@ export class Veil {
 }
 
 // Veils every player on the page, including those the site creates later.
-export function startVeil(site: VeilSite, isEnabled: () => boolean): { refresh(): void; stop(): void } {
+export function startVeil(
+  site: VeilSite,
+  isEnabled: () => boolean,
+  onAdStart?: () => void,
+): { refresh(): void; stop(): void } {
   const veils = new Map<Element, Veil>();
 
   function sync(player: Element): void {
     let veil = veils.get(player);
-    if (!veil) veils.set(player, (veil = new Veil(player as HTMLElement, site)));
+    if (!veil) veils.set(player, (veil = new Veil(player as HTMLElement, site, onAdStart)));
     veil.sync(isEnabled());
   }
 

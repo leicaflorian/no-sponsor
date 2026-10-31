@@ -17,7 +17,7 @@ describe('buildReportUrl', () => {
   it('reports the page state', () => {
     const url = buildReportUrl(
       { mode: 'hide', generic: false, disabledHosts: ['www.amazon.it'] },
-      { n: 3, host: 'www.amazon.it', site: 'amazon' },
+      { n: 3, video: 2, host: 'www.amazon.it', site: 'amazon' },
       '1.2.3',
       tr,
     );
@@ -27,7 +27,8 @@ describe('buildReportUrl', () => {
     expect(b).toContain('Version: 1.2.3');
     expect(b).toContain('Site: www.amazon.it');
     expect(b).toContain('Detector: amazon');
-    expect(b).toContain('Items found: 3');
+    expect(b).toContain('Items found (total): 3');
+    expect(b).toContain('- Video ads veiled: 2');
     expect(b).toContain('Mode: hide');
     expect(b).toContain('Generic detection: off');
     expect(b).toContain('Off on this site: yes');
@@ -40,10 +41,11 @@ describe('buildReportUrl', () => {
     expect(b).toContain('Version: 1.2.3');
     expect(b).toContain('Site: not scanned');
     expect(b).toContain('Mode: highlight');
+    expect(b).toContain('- Video ads veiled: –');
   });
 
   it('encodes the query so the body survives the round trip', () => {
-    const url = buildReportUrl(DEFAULTS, { n: 0, host: 'a&b=c.example', site: null }, '1.2.3', tr);
+    const url = buildReportUrl(DEFAULTS, { n: 0, video: 0, host: 'a&b=c.example', site: null }, '1.2.3', tr);
     expect(url).not.toContain(' ');
     expect(body(url)).toContain('Site: a&b=c.example');
   });

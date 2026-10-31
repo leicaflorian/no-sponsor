@@ -114,5 +114,25 @@
   "reportPrompt": {
     "message": "What's wrong?",
     "description": "First line of the GitHub issue opened by \"Report a problem\": the user writes the answer below it."
+  },
+  "popupVideoOne": {
+    "message": "including $COUNT$ video ad",
+    "description": "Popup, under the counter: how many of the counted items are veiled video ads (one), e.g. \"including 1 video ad\".",
+    "placeholders": {
+      "count": {
+        "content": "$1",
+        "example": "1"
+      }
+    }
+  },
+  "popupVideoMany": {
+    "message": "including $COUNT$ video ads",
+    "description": "Popup, under the counter: how many of the counted items are veiled video ads (several), e.g. \"including 3 video ads\".",
+    "placeholders": {
+      "count": {
+        "content": "$1",
+        "example": "3"
+      }
+    }
   }
 }

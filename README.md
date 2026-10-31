@@ -8,6 +8,8 @@ Dedicated detectors: **Google, Amazon, Subito.it, eBay**. On other sites there i
 
 On **YouTube** and **Prime Video** (`primevideo.com` and `amazon.*/gp/video`), video ads play at **16x**, so a 30-second ad is over in about 2 seconds. Meanwhile the picture is blacked out, the sound is muted and a label on the player shows the real time left. When the ad ends, the video goes on at the speed and with the sound it had before.
 
+Every video ad break that the veil covers counts as one sponsored item in the icon badge and in the popup (shown as a "including N video ads" line); a break resumed within a moment, or a video swap, is not counted again, and the count lasts until the page is reloaded.
+
 The UI is in Italian or English, following the browser's language (English for every other language). The project documentation lives in the owner's vault, outside the repo.
 
 ## Install

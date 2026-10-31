@@ -51,11 +51,12 @@ export default defineContentScript({
 
     let reportTimer: ReturnType<typeof setTimeout> | undefined;
     let lastCount = -1;
+    let videoAds = 0; // veiled video ad breaks, until the page is reloaded
 
     function report(): void {
       clearTimeout(reportTimer);
       reportTimer = setTimeout(() => {
-        const n = count();
+        const n = count() + videoAds;
         if (n === lastCount) return;
         lastCount = n;
         try {
@@ -89,7 +90,11 @@ export default defineContentScript({
 
     browser.storage.sync.get({ ...DEFAULTS }, (stored) => {
       settings = { ...DEFAULTS, ...(stored as Partial<Settings>) };
-      if (VEIL_SITE) veil = startVeil(VEIL_SITE, veilOn);
+      if (VEIL_SITE)
+        veil = startVeil(VEIL_SITE, veilOn, () => {
+          videoAds++;
+          report();
+        });
       applyMode();
       fullScan();
     });
@@ -112,7 +117,7 @@ export default defineContentScript({
 
     browser.runtime.onMessage.addListener((msg: unknown, _sender, reply) => {
       if ((msg as { type?: unknown } | null)?.type === 'nsp-get') {
-        const info: PageInfo = { n: count(), host: HOST, site: SITE?.name || null };
+        const info: PageInfo = { n: count() + videoAds, video: videoAds, host: HOST, site: SITE?.name || null };
         reply(info);
       }
     });
