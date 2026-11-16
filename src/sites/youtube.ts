@@ -1,11 +1,16 @@
-// YouTube: while an ad plays (`ad-showing` on the player) the video is muted and played at 16x, and the remaining
-// time (at that speed) is written on the player; the CSS (html[data-nsp-yt="on"]) blacks out the video and shows
-// that time. Never seeks: currentTime is easier for YouTube to notice than the speed.
+// YouTube: while an ad plays (`ad-showing` on the player) the video is muted and, after the first VEIL_DELAY_MS of a
+// break (muted, visible and at its speed: an ad hidden from its first frame gets the ad blocker warning), played at
+// AD_RATE while the CSS (html[data-nsp-yt="on"]) blacks it out and shows the remaining time written on the player.
+// AD_RATE is 2x, not the 16x of the other sites: at 16x and at 8x YouTube showed its ad blocker warning, at normal
+// speed it did not (owner's tests, 16/11/2026). Never seeks.
 // Clicking Skip from a script does nothing: YouTube ignores clicks that are not trusted (1.0.6, removed in 1.0.8).
 
 import { Veil, startVeil, type VeilSite } from './ad-veil';
 
-export { RESTORE_DELAY_MS, TICK_MS, AD_RATE, USER_INPUT_MS, formatRemaining } from './ad-veil';
+export { RESTORE_DELAY_MS, TICK_MS, USER_INPUT_MS, formatRemaining } from './ad-veil';
+
+export const VEIL_DELAY_MS = 2000;
+export const AD_RATE = 2;
 
 export const YOUTUBE: VeilSite = {
   player: '.html5-video-player',
@@ -14,6 +19,8 @@ export const YOUTUBE: VeilSite = {
   inAd: (player) => player.classList.contains('ad-showing'),
   video: (player) => player.querySelector('video'),
   adSecondsLeft: (_player, video) => video.duration - video.currentTime,
+  veilDelayMs: VEIL_DELAY_MS,
+  adRate: AD_RATE,
 };
 
 export class AdVeil extends Veil {

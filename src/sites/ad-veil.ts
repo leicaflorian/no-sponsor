@@ -1,11 +1,11 @@
-// Ad veil shared by the sites: while an ad plays the video is muted and played at 16x, and the remaining time (at
-// that speed) is written on the player; the CSS (html[data-nsp-yt="on"] / html[data-nsp-pv="on"] /
-// html[data-nsp-nf="on"]) blacks out the video and shows that time. Never seeks: currentTime is easier for a site
-// to notice than the speed.
+// Ad veil shared by the sites: while an ad plays the video is muted and played at 16x (or the site's adRate), and
+// the remaining time (at that speed) is written on the player; the CSS (html[data-nsp-yt="on"] /
+// html[data-nsp-pv="on"] / html[data-nsp-nf="on"]) blacks out the video and shows that time. Never seeks:
+// currentTime is easier for a site to notice than the speed.
 
 export const RESTORE_DELAY_MS = 300; // two ads in a row can drop `ad-showing` for an instant
 export const TICK_MS = 500;
-export const AD_RATE = 16; // the highest speed Chrome plays
+export const AD_RATE = 16; // the highest speed Chrome plays; a site can ask for less (VeilSite.adRate)
 export const USER_INPUT_MS = 1000; // an unmute this soon after a click or key press is the user's
 
 const INPUTS = ['pointerdown', 'keydown'] as const;
@@ -26,6 +26,10 @@ export interface VeilSite {
   adSecondsLeft(player: HTMLElement, video: HTMLVideoElement): number; // ad seconds (not real ones); NaN when unknown
   // The ad is in the same <video> as the content: give the speed back as soon as the ad ends, not after the delay.
   restoreRateAtOnce?: boolean;
+  // At the start of a break the ad plays muted, visible and at its speed for this long before the veil (and the
+  // speed-up, if any): an ad hidden or sped up from its first frame is how the site spots an ad blocker.
+  veilDelayMs?: number;
+  adRate?: number | null; // the speed of the ad; AD_RATE when not given, null to leave the speed alone
 }
 
 export class Veil {
@@ -34,6 +38,7 @@ export class Veil {
   private rateBefore: number | null = null; // the speed to give back, when the extension changed it
   private tick: ReturnType<typeof setInterval> | undefined;
   private restore: ReturnType<typeof setTimeout> | undefined;
+  private veilTimer: ReturnType<typeof setTimeout> | undefined;
   private lastInput = -Infinity;
   private inBreak = false; // the current break is already counted; cleared only when the ad is really gone
 
@@ -42,6 +47,10 @@ export class Veil {
     private readonly site: VeilSite,
     private readonly onAdStart?: () => void,
   ) {}
+
+  private get rate(): number | null {
+    return this.site.adRate === undefined ? AD_RATE : this.site.adRate;
+  }
 
   sync(enabled: boolean): void {
     const inAd = enabled && this.site.inAd(this.player);
@@ -60,6 +69,7 @@ export class Veil {
     const video = this.site.video(this.player);
     if (!video) return;
     this.video = video;
+    let wait = 0;
     if (this.restore !== undefined) {
       // Back-to-back ads: still the same break, audio and speed stay as they are.
       clearTimeout(this.restore);
@@ -72,15 +82,29 @@ export class Veil {
         video.muted = true;
         this.mutedByUs = true;
       }
-      if (video.playbackRate !== AD_RATE) this.rateBefore = video.playbackRate;
+      if (this.rate !== null && video.playbackRate !== this.rate) this.rateBefore = video.playbackRate;
+      if (countBreak) wait = this.site.veilDelayMs ?? 0;
     }
-    video.playbackRate = AD_RATE;
     video.addEventListener('volumechange', this.onVolume);
-    video.addEventListener('ratechange', this.onRate);
     for (const type of INPUTS) window.addEventListener(type, this.onInput, true);
+    if (wait) {
+      this.player.dataset['nspWaiting'] = ''; // the CSS leaves the video visible
+      this.veilTimer = setTimeout(this.cover, wait);
+    } else this.cover();
+  }
+
+  private cover = (): void => {
+    this.veilTimer = undefined;
+    delete this.player.dataset['nspWaiting'];
+    const video = this.video;
+    if (!video) return;
+    if (this.rate !== null) {
+      video.playbackRate = this.rate;
+      video.addEventListener('ratechange', this.onRate);
+    }
     this.update();
     this.tick = setInterval(this.update, TICK_MS);
-  }
+  };
 
   private stop(delay: number): void {
     this.video?.removeEventListener('volumechange', this.onVolume);
@@ -88,11 +112,14 @@ export class Veil {
     for (const type of INPUTS) window.removeEventListener(type, this.onInput, true);
     clearInterval(this.tick);
     this.tick = undefined;
+    clearTimeout(this.veilTimer);
+    this.veilTimer = undefined;
+    delete this.player.dataset['nspWaiting'];
     delete this.player.dataset['nspRemaining'];
     const video = this.video;
     this.video = null;
     if (!video || (!this.mutedByUs && this.rateBefore === null)) return;
-    if (delay && this.site.restoreRateAtOnce && this.rateBefore !== null && video.playbackRate === AD_RATE) {
+    if (delay && this.site.restoreRateAtOnce && this.rateBefore !== null && video.playbackRate === this.rate) {
       video.playbackRate = this.rateBefore; // rateBefore stays: a timer that comes back within the delay is the same break
     }
     if (delay) this.restore = setTimeout(() => this.restoreVideo(video), delay);
@@ -111,7 +138,7 @@ export class Veil {
     this.restore = undefined;
     if (this.mutedByUs) video.muted = false;
     this.mutedByUs = false;
-    if (this.rateBefore !== null && video.playbackRate === AD_RATE) video.playbackRate = this.rateBefore;
+    if (this.rateBefore !== null && video.playbackRate === this.rate) video.playbackRate = this.rateBefore;
     this.rateBefore = null;
   }
 
@@ -129,9 +156,9 @@ export class Veil {
     else video.muted = true;
   };
 
-  // The player sets its own speed when it loads the ad: back to 16x until the ad ends.
+  // The player sets its own speed when it loads the ad: back to the ad speed until the ad ends.
   private onRate = (): void => {
-    if (this.video && this.video.playbackRate !== AD_RATE) this.video.playbackRate = AD_RATE;
+    if (this.rate !== null && this.video && this.video.playbackRate !== this.rate) this.video.playbackRate = this.rate;
   };
 
   private update = (): void => {
@@ -143,7 +170,7 @@ export class Veil {
     }
     const v = this.video;
     // Loading a stream resets the speed to the default without a `ratechange`.
-    if (v && v.playbackRate !== AD_RATE) v.playbackRate = AD_RATE;
+    if (this.rate !== null && v && v.playbackRate !== this.rate) v.playbackRate = this.rate;
     const t = v ? formatRemaining(this.site.adSecondsLeft(this.player, v) / (v.playbackRate || 1)) : null;
     if (t) this.player.dataset['nspRemaining'] = t;
     else delete this.player.dataset['nspRemaining'];
