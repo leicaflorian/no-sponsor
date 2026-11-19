@@ -79,7 +79,7 @@
     </svg>
     <div>
       <h1>Video ads, <b>veiled</b><span class="new">NEW</span></h1>
-      <p>On YouTube, Prime Video and Netflix: black picture, no sound, played at 16x.</p>
+      <p>On YouTube, Prime Video and Netflix: black picture, no sound, sped up (2x on YouTube, 16x on Prime Video and Netflix).</p>
     </div>
   </header>
 
@@ -96,7 +96,7 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
               <path d="M4 9h4l5-4v14l-5-4H4z" fill="currentColor" /><path d="M16 9l5 6M21 9l-5 6" />
             </svg>
-            <span class="speed">16x</span>
+            <span class="speed"></span>
           </div>
         </div>
       </div>
@@ -127,9 +127,9 @@
 
   <script>
     const services = [
-      { name: 'YouTube', left: '0:12', done: 35 },
-      { name: 'Prime Video', left: '0:24', done: 20 },
-      { name: 'Netflix', left: '0:07', done: 60 },
+      { name: 'YouTube', left: '0:12', done: 35, speed: '2x' },
+      { name: 'Prime Video', left: '0:24', done: 20, speed: '16x' },
+      { name: 'Netflix', left: '0:07', done: 60, speed: '16x' },
     ];
     const tpl = document.getElementById('player');
     const players = document.querySelector('.players');
@@ -138,6 +138,7 @@
       node.querySelector('.name').textContent = s.name;
       node.querySelector('.tag').textContent = `Ad · ${s.left} left`;
       node.querySelector('.progress i').style.width = `${s.done}%`;
+      node.querySelector('.speed').textContent = s.speed;
       players.append(node);
     }
   </script>

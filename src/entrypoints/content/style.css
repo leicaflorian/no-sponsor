@@ -114,7 +114,7 @@ html[data-nsp-mode='hide'] .nsp-hit {
 /* ---------- Video ads in the player (YouTube, Prime Video, Netflix) ---------- */
 
 /* Black video, no advertiser card; Skip, its countdown, "Sponsorizzato" and the controls stay visible. */
-/* YouTube: not during the first seconds of a break (data-nsp-waiting), while the ad plays muted at normal speed. */
+/* Not while a site waits before the veil (VeilSite.veilDelayMs: data-nsp-waiting); no site waits today. */
 html[data-nsp-yt='on'] .html5-video-player.ad-showing:not([data-nsp-waiting]) video {
   opacity: 0 !important;
 }
