@@ -144,3 +144,63 @@ describe('startVeil', () => {
     veil.stop();
   });
 });
+
+// No site waits today (YouTube did for 2 s, 16-19/11/2026): the wait is kept and tested on a YouTube-like site.
+describe('Veil veilDelayMs', () => {
+  const DELAY = 2000;
+  const WAITING = { ...YOUTUBE, veilDelayMs: DELAY };
+  beforeEach(() => vi.useFakeTimers());
+  afterEach(() => vi.useRealTimers());
+
+  function setup() {
+    const player = youtubePlayer();
+    const video = player.querySelector('video') as HTMLVideoElement;
+    Object.defineProperty(video, 'duration', { configurable: true, get: () => 32 });
+    Object.defineProperty(video, 'currentTime', { configurable: true, get: () => 0 });
+    return { player, video, veil: new Veil(player, WAITING) };
+  }
+
+  it('lets the ad play muted, visible and at its speed, then veils it and speeds it up', () => {
+    const { player, video, veil } = setup();
+    ad(veil, player, true);
+    expect(video.muted).toBe(true);
+    expect(video.playbackRate).toBe(1);
+    expect(player.hasAttribute('data-nsp-waiting')).toBe(true);
+    expect(player.hasAttribute('data-nsp-remaining')).toBe(false);
+    vi.advanceTimersByTime(DELAY - 1);
+    expect(player.hasAttribute('data-nsp-waiting')).toBe(true);
+    vi.advanceTimersByTime(1);
+    expect(player.hasAttribute('data-nsp-waiting')).toBe(false);
+    expect(video.playbackRate).toBe(WAITING.adRate);
+    expect(player.dataset['nspRemaining']).toBe('0:16');
+  });
+
+  it('gives everything back when the ad ends before the delay', () => {
+    const { player, video, veil } = setup();
+    ad(veil, player, true);
+    ad(veil, player, false);
+    vi.advanceTimersByTime(DELAY);
+    expect(video.muted).toBe(false);
+    expect(video.playbackRate).toBe(1);
+    expect(player.hasAttribute('data-nsp-waiting')).toBe(false);
+  });
+
+  it('does not wait again for the second of two back-to-back ads', () => {
+    const { player, veil } = setup();
+    ad(veil, player, true);
+    vi.advanceTimersByTime(DELAY);
+    ad(veil, player, false);
+    vi.advanceTimersByTime(RESTORE_DELAY_MS - 100);
+    ad(veil, player, true);
+    expect(player.hasAttribute('data-nsp-waiting')).toBe(false);
+  });
+
+  it('cancels the veil when the site is disabled during the wait', () => {
+    const { player, video, veil } = setup();
+    ad(veil, player, true);
+    veil.sync(false);
+    vi.advanceTimersByTime(DELAY);
+    expect(video.muted).toBe(false);
+    expect(player.hasAttribute('data-nsp-waiting')).toBe(false);
+  });
+});

@@ -141,13 +141,13 @@ describe('AdVeil', () => {
 
   it('writes the remaining time and removes it at the end', () => {
     const { player, video } = setup();
-    setTime(video, 320, 112); // 208 s of ad at 16x: 13 s
+    setTime(video, 320, 112); // 208 s of ad at 2x: 104 s
     const veil = new AdVeil(player);
     ad(veil, player, true);
-    expect(player.dataset['nspRemaining']).toBe('0:13');
+    expect(player.dataset['nspRemaining']).toBe('1:44');
     setTime(video, 320, 240);
     vi.advanceTimersByTime(TICK_MS);
-    expect(player.dataset['nspRemaining']).toBe('0:05');
+    expect(player.dataset['nspRemaining']).toBe('0:40');
     ad(veil, player, false);
     expect(player.hasAttribute('data-nsp-remaining')).toBe(false);
   });
@@ -192,6 +192,20 @@ describe('AdVeil', () => {
   });
 });
 
+describe('AdVeil start', () => {
+  beforeEach(() => vi.useFakeTimers());
+  afterEach(() => vi.useRealTimers());
+
+  it('veils the ad from its first frame: no wait on YouTube', () => {
+    const { player, video } = setup();
+    setTime(video, 32, 0);
+    ad(new AdVeil(player), player, true);
+    expect(player.hasAttribute('data-nsp-waiting')).toBe(false);
+    expect(video.playbackRate).toBe(AD_RATE);
+    expect(player.dataset['nspRemaining']).toBe('0:16');
+  });
+});
+
 describe('AdVeil speed', () => {
   beforeEach(() => vi.useFakeTimers());
   afterEach(() => vi.useRealTimers());
@@ -202,7 +216,11 @@ describe('AdVeil speed', () => {
     video.dispatchEvent(new Event('ratechange'));
   }
 
-  it('plays the ad at 16x and restores the previous speed after the delay', () => {
+  it('plays YouTube ads at 2x, well below the 16x of the other sites', () => {
+    expect(AD_RATE).toBe(2);
+  });
+
+  it('plays the ad at 2x from its start and restores the previous speed after the delay', () => {
     const { player, video } = setup();
     video.playbackRate = 1.5;
     const veil = new AdVeil(player);
@@ -233,32 +251,11 @@ describe('AdVeil speed', () => {
     expect(video.playbackRate).toBe(1.25);
   });
 
-  it('stays at 16x across two back-to-back ads', () => {
-    const { player, video } = setup();
-    video.playbackRate = 2;
-    const veil = new AdVeil(player);
-    ad(veil, player, true);
-    ad(veil, player, false);
-    vi.advanceTimersByTime(RESTORE_DELAY_MS - 100);
-    ad(veil, player, true);
-    vi.advanceTimersByTime(RESTORE_DELAY_MS);
-    expect(video.playbackRate).toBe(AD_RATE);
-    ad(veil, player, false);
-    vi.advanceTimersByTime(RESTORE_DELAY_MS);
-    expect(video.playbackRate).toBe(2);
-  });
-
   it('restores the speed at once when the site is disabled', () => {
     const { player, video } = setup();
     const veil = new AdVeil(player);
     ad(veil, player, true);
     veil.sync(false);
-    expect(video.playbackRate).toBe(1);
-  });
-
-  it('does not change the speed while the site is disabled', () => {
-    const { player, video } = setup();
-    ad(new AdVeil(player), player, true, false);
     expect(video.playbackRate).toBe(1);
   });
 
@@ -278,9 +275,9 @@ describe('AdVeil speed', () => {
 
   it('writes the remaining time at the real speed', () => {
     const { player, video } = setup();
-    setTime(video, 32, 0); // 32 s of ad at 16x: 2 s
+    setTime(video, 32, 0); // 32 s of ad at 2x: 16 s
     ad(new AdVeil(player), player, true);
-    expect(player.dataset['nspRemaining']).toBe('0:02');
+    expect(player.dataset['nspRemaining']).toBe('0:16');
   });
 });
 

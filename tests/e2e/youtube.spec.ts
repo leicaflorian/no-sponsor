@@ -35,14 +35,14 @@ const state = () =>
     };
   });
 
-test('veils the ad, plays it at 16x and keeps Skip visible', async () => {
+test('veils the ad, plays it at 2x and keeps Skip visible', async () => {
   // The video must have loaded its metadata, otherwise the duration is unknown.
   await page.waitForFunction(() => (document.querySelector('video') as HTMLVideoElement).readyState >= 1);
   await setAd(true);
   await expect.poll(async () => (await state()).muted, { timeout: 1_000 }).toBe(true);
   const s = await state();
   expect(s.opacity).toBe('0');
-  expect(s.rate).toBe(16);
+  expect(s.rate).toBe(2);
   expect(s.card).toBe('none');
   expect(s.remaining).toMatch(/^0:\d\d$/);
   expect(s.label).toContain('Annuncio · mancano');
