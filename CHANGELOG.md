@@ -2,6 +2,13 @@
 
 All notable changes to NoSponsor. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and the version is the one in `package.json` and the manifest.
 
+## [1.0.14] - 2026-11-22
+
+### Changed
+
+- YouTube: video ads now play at 2x instead of 16x (a 30-second ad takes about 15 seconds). At 16x YouTube took the extension for an ad blocker and showed its ad blocker warning. The ad is still muted and blacked out from its first frame, with a label showing the real time left, and your previous speed and volume come back when it ends. Prime Video and Netflix are unchanged and still play ads at 16x.
+- New summary in the Chrome Web Store and in the browser, in English and Italian: it now names Prime Video and Netflix next to YouTube ("Speeds through YouTube, Prime Video and Netflix ads"; Italian: "Velocizza annunci YouTube, Prime Video e Netflix").
+
 ## [1.0.13] - 2026-11-01
 
 ### Added
